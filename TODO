@@ -1,0 +1,2 @@
+Modify the current rotworker3 to accept SIGHUP requests and to
+die gracefully.

@@ -1,17 +1,23 @@
-TARGETS=quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten
+TARGETS=quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 tailer
 all:	$(TARGETS)
 
-quick:	quick.c utils.h utils.c
-	gcc -g -Wall -o quick quick.c utils.c
+tailer:	tailer.c utils.o
+	gcc -g -O2 -o tailer tailer.c utils.o
 
-rotworker:	rotworker.c utils.c utils.h
-	gcc -Wall -O2 -o rotworker rotworker.c utils.c
+quick:	quick.c utils.o
+	gcc -g -Wall -o quick quick.c utils.o
 
-rotworker2:	rotworker2.c utils.c utils.h
-	gcc -Wall -O2 -o rotworker2 rotworker2.c utils.c
+rotworker:	rotworker.c utils.o
+	gcc -Wall -O2 -o rotworker rotworker.c utils.o
+
+rotworker2:	rotworker2.c utils.o
+	gcc -Wall -O2 -o rotworker2 rotworker2.c utils.o
+
+rotworker3:	rotworker3.c utils.o
+	gcc -Wall -O2 -o rotworker3 rotworker3.c utils.o
 
 utils.o:	utils.c utils.h
-	gcc -c utils.c
+	gcc -O2 -c utils.c
 
 props:	props.c utils.o
 	gcc -o props props.c utils.o
