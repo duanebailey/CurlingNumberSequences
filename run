@@ -1,0 +1,11 @@
+#!/usr/local/bin/bash
+while :; do 
+   lockfile DATA/launch.lock
+   i=`cat DATA/last-run`
+   let i=$i+1
+   echo $i >DATA/last-run
+   rm -f DATA/launch.lock
+   date > DATA/start-$i
+   rotworker3 $i >DATA/rotten-$i
+   date > DATA/finish-$i
+done
