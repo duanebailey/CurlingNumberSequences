@@ -220,6 +220,7 @@ int rotten(char *t, int start, char *t2)
     strncpy(buffer+1,t,start);
     buffer[start+1] = '\0';
     t_update(buffer,t2);
+    free(buffer);
     if (strlen(t2)-1 < n) return result;
   }
   return 0;
