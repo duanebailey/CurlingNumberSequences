@@ -52,8 +52,8 @@ int rightmostFlaw(char *s)
 char *nCat(int k, char *Y)
 {
   char *Yk = strdup(Y);
-  int i = 1;
-  while (i < k) {
+  int i;
+  for (i=1; i < k; i++) {
     char *t = catenate(Yk,Y);
     free(Yk);
     Yk = t;
