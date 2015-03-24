@@ -75,8 +75,8 @@ char *fixPrefix(char *s, int p)
   char *Y;
   int k = s[p]-'0';
   int l;
-  for (l = (p+1)/k; l < p; l++) {
-    char *base = strdup(head+p-l+1);
+  for (l = (p+1)/k; l <= p; l++) {
+    char *base = strdup(head+p-l);
     Y = nCat(k,base);
     free(base);
     if (isSuffix(Y,head)) {
