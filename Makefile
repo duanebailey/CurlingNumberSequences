@@ -13,6 +13,9 @@ rotworker:	rotworker.c utils.o
 rotworker2:	rotworker2.c utils.o
 	gcc -Wall -O2 -o rotworker2 rotworker2.c utils.o
 
+rw3:	rotworker3.c utils.o
+	gcc -Wall -g -o rotworker3 rotworker3.c utils.o
+
 rotworker3:	rotworker3.c utils.o
 	gcc -Wall -O2 -o rotworker3 rotworker3.c utils.o
 

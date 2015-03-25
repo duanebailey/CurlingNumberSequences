@@ -1,6 +1,6 @@
 /*
- * In this version of detection of rottenness, we attempt to re-use
- * calculations as much as possible.
+ * A dynamic-programming approach to computing curl with minimum recompute.
+ * (c) 2015 duane a. bailey
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,18 +18,18 @@ char *S;
 
 char *progName;
 int nbits = 0;
-long start = -1, current;
-long delta = 0;
+char *current = 0;
+long count = 0;
 int debug = 0;
 
 void Usage(char *prog)
 {
-  fprintf(stderr,"Usage: %s [-hd] [bits [start [delta]]]\n",prog);
+  fprintf(stderr,"Usage: %s [-hd] [-s start] bits [count]\n",prog);
   fprintf(stderr,"\t-h\tprint this help\n");
   fprintf(stderr,"\t-d\tdebugging print\n");
+  fprintf(stderr,"\t-s\tinitialize with starting string.\n");
   fprintf(stderr,"\tbits\tnumber of bits in representation (currently %d)\n",nbits);
-  fprintf(stderr,"\tstart\tstarting pattern (currently 0x%lx)\n",start);
-  fprintf(stderr,"\tdelta\tnumber of patterns to consider (currently %ld)\n",delta);
+  fprintf(stderr,"\tcount\tnumber of patterns to consider (currently %ld)\n",count);
   exit(1);
 }
 
@@ -41,6 +41,10 @@ void parseArgs(int argc, char**argv)
     if (*arg == '-') {
       while (*++arg) {
 	switch (*arg) {
+	case 's':
+	  current = strdup(*++argv);
+	  argc--;
+	  break;
 	case 'h':
 	  Usage(progName);
 	case 'd':
@@ -53,15 +57,19 @@ void parseArgs(int argc, char**argv)
       }
     } else {
       if (!nbits) nbits = atoi(arg);
-      else if (start == -1) start = atol(arg);
-      else if (!delta) delta = atol(arg);
+      else if (!count) count = atol(arg);
       else Usage(progName);
     }
   }
   if (!nbits) nbits = 8;
-  if (start == -1) start = 0;
-  if (!delta) delta = (1L<<nbits)-start;
-  assert(start+delta <= (1L<<nbits));
+  if (!current) {
+    int i;
+    current = (char*)malloc(nbits+1);
+    for (i = 0; i < nbits; i++) current[i] = '\2';
+    current[nbits] = 0;
+  }
+  if (!count) count = 1L<<nbits;
+  printf("nbits=%d start=%s count=%ld\n",nbits,current,count);
 }
 
 char *ltos(long n)
@@ -242,22 +250,22 @@ int inc(char *s)
 
 int main(int argc, char **argv)
 {
-  char *t,*t2,*buffer;
+  char *t,*t2;
   int l;
   parseArgs(argc,argv);
   t = t_alloc();
   t2 = t_alloc();
-  buffer = ltos(0);
-  l = strlen(buffer);
-  s2i(buffer);
-  while (1) {
-    t_update(buffer,t);
+  l = strlen(current);
+  s2i(current);
+  while (count > 0) {
+    t_update(current,t);
     if (rotten(t,l,t2)) {
-      i2s(buffer);
-      puts(buffer);
-      s2i(buffer);
+      i2s(current);
+      puts(current);
+      s2i(current);
     }
-    if (!inc(buffer)) break;
+    count--;
+    if (!inc(current)) break;
   }
   return 0;
 }
