@@ -1,11 +1,13 @@
 #!/usr/local/bin/bash
+echo "My pid is $$"
 while :; do 
    lockfile DATA/launch.lock
    i=`cat DATA/last-run`
    let i=$i+1
    echo $i >DATA/last-run
    rm -f DATA/launch.lock
+   echo "run $$ launching problem $i"
    date > DATA/start-$i
-   rotworker3 $i >DATA/rotten-$i
+   rotworker3 -n $i >DATA/rotten-$i
    date > DATA/finish-$i
 done

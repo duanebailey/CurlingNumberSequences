@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <assert.h>
+#include <time.h>
 /*
  * We assume that our work is on arrays with N or fewer entries.
  * The zero'th row is the string, S, under consideration.
@@ -21,14 +23,19 @@ int nbits = 0;
 char *current = 0;
 long count = 0;
 int debug = 0;
+int done = 0;
+int terminate = 0;
+
+char *s2i(char *s);
+char *i2s(char *s);
 
 void Usage(char *prog)
 {
-  fprintf(stderr,"Usage: %s [-hd] [-s start] bits [count]\n",prog);
+  fprintf(stderr,"Usage: %s [-hd] [-s start] [-n nbits]\n",prog);
   fprintf(stderr,"\t-h\tprint this help\n");
   fprintf(stderr,"\t-d\tdebugging print\n");
+  fprintf(stderr,"\t-n\tset number of bits to nbits\n");
   fprintf(stderr,"\t-s\tinitialize with starting string.\n");
-  fprintf(stderr,"\tbits\tnumber of bits in representation (currently %d)\n",nbits);
   fprintf(stderr,"\tcount\tnumber of patterns to consider (currently %ld)\n",count);
   exit(1);
 }
@@ -42,7 +49,11 @@ void parseArgs(int argc, char**argv)
       while (*++arg) {
 	switch (*arg) {
 	case 's':
-	  current = strdup(*++argv);
+	  current = s2i(strdup(*++argv));
+	  argc--;
+	  break;
+	case 'n':
+	  nbits = atoi(*++argv);
 	  argc--;
 	  break;
 	case 'h':
@@ -56,8 +67,7 @@ void parseArgs(int argc, char**argv)
 	}
       }
     } else {
-      if (!nbits) nbits = atoi(arg);
-      else if (!count) count = atol(arg);
+      if (!count) count = atol(arg);
       else Usage(progName);
     }
   }
@@ -68,8 +78,10 @@ void parseArgs(int argc, char**argv)
     for (i = 0; i < nbits; i++) current[i] = '\2';
     current[nbits] = 0;
   }
+  if (nbits != strlen(current)) {
+    fprintf(stderr,"start string has wrong number of bits.\n");
+  }
   if (!count) count = 1L<<nbits;
-  printf("nbits=%d start=%s count=%ld\n",nbits,current,count);
 }
 
 char *ltos(long n)
@@ -96,14 +108,16 @@ char *t_alloc()
 
 char *i2s(char *s)
 {
+  char *result = s;
   while (*s) { *s += '0'; s++; }
-  return s;
+  return result;
 }
 
 char *s2i(char *s)
 {
+  char *result = s;
   while (*s) { *s -= '0'; s++; }
-  return s;
+  return result;
 }
 
 void t_print(char *t, int n)
@@ -119,6 +133,7 @@ void t_print(char *t, int n)
     putchar('\n');
   }
 }
+
 void t_update(char *start, char *t)
 {
   char *s = t;
@@ -248,24 +263,53 @@ int inc(char *s)
   return 0;
 }
 
+void terminateHandler(int i)
+{
+  terminate=1;
+}
+
 int main(int argc, char **argv)
 {
   char *t,*t2;
   int l;
+  long i;
+  long start, now, eta;
+  int starting = 1;
+  signal(2,terminateHandler);
   parseArgs(argc,argv);
   t = t_alloc();
   t2 = t_alloc();
   l = strlen(current);
-  s2i(current);
-  while (count > 0) {
+  start = time(0);
+  fprintf(stderr,"#start: %s",ctime(&start));
+  for (i = 0L; i < count && !terminate; i++) {
     t_update(current,t);
     if (rotten(t,l,t2)) {
       i2s(current);
       puts(current);
       s2i(current);
     }
-    count--;
-    if (!inc(current)) break;
+    if (!inc(current)) {
+      done = 1;
+      break;
+    }
+    if (starting && i % 1000) {
+      now = time(0);
+      if (now - start >= 10) {
+	int speed = i/10;
+	eta = (count/speed)+start;
+	fprintf(stderr,"#  ETA: %s",ctime(&eta));
+	starting = 0;
+      }
+    }
+  }
+  long end = time(0);
+  fprintf(stderr,"#  end: %s",ctime(&end));
+  if (!done) {
+    i2s(current);
+    fflush(stdout);
+    fprintf(stderr,"# Interrupted.  Resume with:\n# %s -n %d -s %s\n",
+	    progName,nbits,current);
   }
   return 0;
 }
