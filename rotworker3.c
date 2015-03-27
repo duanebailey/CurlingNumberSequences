@@ -286,7 +286,7 @@ int main(int argc, char **argv)
     t_update(current,t);
     if (rotten(t,l,t2)) {
       i2s(current);
-      puts(current);
+      puts(current); fflush(stdout);
       s2i(current);
     }
     if (!inc(current)) {
@@ -308,7 +308,7 @@ int main(int argc, char **argv)
   if (!done) {
     i2s(current);
     fflush(stdout);
-    fprintf(stderr,"# Interrupted.  Resume with:\n# %s -n %d -s %s\n",
+    fprintf(stderr,"# You can pick up from here with:\n# %s -n %d -s %s\n",
 	    progName,nbits,current);
   }
   return 0;
