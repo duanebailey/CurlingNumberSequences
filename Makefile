@@ -58,4 +58,5 @@ clean:
 
 realclean:	clean
 	@rm -f $(TARGETS)
+	@rm -rf *.dSYM
 	@echo Real clean.
