@@ -1,3 +1,4 @@
+#define ADLY
 /*
  * A dynamic-programming approach to computing curl with minimum recompute.
  * (c) 2015 duane a. bailey
@@ -223,7 +224,13 @@ void t_update(char *start, char *t)
     ch = s[c]; // *u to be compared with ch
     while (r <= c/2) {
       u--;
+#ifdef ADLY
+      *p = 1;
+      if (ch == *u) *p += p[-r];
+#else
       *p = (ch == *u) ? p[-r]+1 : 1;
+#endif
+
       r++;
       p += N; // p points to next row
     }
