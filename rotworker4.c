@@ -22,10 +22,7 @@ char *progName;
 int nbits = 0;
 char *current = 0;
 long count = 0;
-int debug = 0;
-int verbose = 0;
 int done = 0;
-int terminate = 0;
 
 char *s2i(char *s);
 char *i2s(char *s);
@@ -33,15 +30,12 @@ char *b2i(long i);
 
 void Usage(char *prog)
 {
-  fprintf(stderr,"Usage: %s [-hdv] [-s start-string] [-n nbits] [-S start-int] [-c count]\n",prog);
+  fprintf(stderr,"Usage: %s [-h] [-s start-string] [-n nbits] [-S start-int] [-c count]\n",prog);
   fprintf(stderr,"\t-h\tprint this help\n");
-  fprintf(stderr,"\t-d\tdebugging print\n");
-  fprintf(stderr,"\t-v\tverbose timing print\n");
   fprintf(stderr,"\t-n\tset number of bits to nbits\n");
   fprintf(stderr,"\t-s\tinitialize with starting string.\n");
   fprintf(stderr,"\t-S\tinitialize with starting binary value.\n");
-  fprintf(stderr,"\t-c\tcount of values to check.\n");
-  fprintf(stderr,"\tcount\tnumber of patterns to consider (currently %ld)\n",count);
+  fprintf(stderr,"\t-c\tcount of values to check (now %ld).\n",count);
   exit(1);
 }
 
@@ -76,12 +70,6 @@ void parseArgs(int argc, char**argv)
 	  break;
 	case 'h':
 	  Usage(progName);
-	case 'd':
-	  debug = 1;
-	  break;
-	case 'v':
-	  verbose = 1;
-	  break;
 	default:
 	  fprintf(stderr,"Didn't parse switch %c.\n",*arg);
 	  Usage(progName);
@@ -180,7 +168,7 @@ void t_update(char *start, char *t)
   char *s = t;
   char *tp,*rp,*u;
   char ch;
-  int c,cb; // current column
+  int c; // current column
   int max, bound, r, min;
   int curling = 0;
   c = 0;
@@ -216,6 +204,8 @@ void t_update(char *start, char *t)
       if (s[c] == 1) return;
     }
     // 2. If we've not hit 1, compute the column of repeat counts
+#ifdef COMMENT
+    int cb;
     r = 1;
     ch = s[c];
     u = s+c;
@@ -225,6 +215,23 @@ void t_update(char *start, char *t)
     }
     for (; r <= c+1;r++) {
       t[X(r,c)] = 1+(ch == *--u);
+    }
+#endif
+    r = 1;
+    char *p = t + N + c; // p points to t[1,c]
+    u = s+c; // u points back r positions in string
+    ch = s[c]; // *u to be compared with ch
+    while (r <= c/2) {
+      u--;
+      *p = (ch == *u) ? p[-r]+1 : 1;
+      r++;
+      p += N; // p points to next row
+    }
+    while (r <= c) {
+      u--;
+      *p = 1+(ch == *u);
+      p += N;
+      r++;
     }
     c++;
   }
@@ -289,24 +296,16 @@ int rotten(char *t, int start, char *t2)
   return 0;
 }
 
-int inc(char *s)
+inline void inc(char *s)
 {
-  int l = strlen(s);
-  int p = l-1;
-  while (p >= 0) {
-    if (s[p] == 2) {
-      s[p] = 3;
-      return 1;
+  char *p = s+(nbits-1);
+  while (p >= s) {
+    if (*p == 2) {
+      *p = 3;
+      break;
     }
-    s[p--] = 2;
+    *p-- = 2;
   }
-  return 0;
-}
-
-void terminateHandler(int i)
-// control-c in a controlled way
-{
-  terminate=1;
 }
 
 int main(int argc, char **argv)
@@ -314,22 +313,16 @@ int main(int argc, char **argv)
   char *t,*t2;
   int l;
   long i;
-  long start;
-  int starting = 1;
   int first = 1;
-  // install termination handler
-  signal(2,terminateHandler);
   // deal with switches
   parseArgs(argc,argv);
   // allocate two arrays. we're very careful of memory leaks because
   // everything happens zillions of times
   t = t_alloc();
   t2 = t_alloc();
-  l = strlen(current);
-  start = time(0);
-  if (verbose) fprintf(stderr,"#start: %s",ctime(&start));
+  l = nbits;
   printf("[");fflush(stdout);
-  for (i = 0L; i < count && !terminate; i++) {
+  for (i = 0L; i < count; i++) {
     // fill out table
     t_update(current,t);
     // check for rottenness
@@ -339,31 +332,9 @@ int main(int argc, char **argv)
       first = 0;
       s2i(current);
     }
-    if (!inc(current)) {  // expensive?
-      done = 1;
-      break;
-    }
-    // stupid code written by stupid programmer
-    if (verbose & starting && i % 1000) {
-      long now = time(0);
-      if (now - start >= 10) {
-	int speed = i/10;
-	long eta = (count/speed)+start;
-	if (verbose) fprintf(stderr,"#  ETA: %s",ctime(&eta));
-	starting = 0;
-      }
-    }
+    inc(current);
   }
   printf("]\n");
-  long end = time(0);
   // AMEN.
-  if (verbose) fprintf(stderr,"#  end: %s",ctime(&end));
-  if (verbose & !done) {
-    i2s(current);
-    fflush(stdout);
-    // in case of early termination, help poor user restart
-    fprintf(stderr,"# You can pick up from here with:\n# %s -n %d -s '%s'\n",
-	    progName,nbits,current);
-  }
   return 0;
 }

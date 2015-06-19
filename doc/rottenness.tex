@@ -113,5 +113,33 @@ $M[i\downarrow,j\rightarrow]$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\\hline\
 8 &  1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & \\ \hline
 \end{tabular}
 \end{center}
+\ni As part of the calculation of $M[0,8]$, we compute the minimum value
+encountered in the last $i$ entries (entries at $8-i$ through $7$) of 
+each row $1\le i\le 3$.  The maximum ($3$) of these values ($1$, $3$, and $1$)
+is the curl.  Notice that $M[2,6]$ effectively determines the curl for this
+problem.  If that entry had been $4$, the curl would have been $4$ and the
+tail would have been shortened.  Now, notice that a prefix of 2 (the value
+at $M[0,6]$) would cause this entry in the table to increase by one, causing
+the curl to increase to $4$ and shorten the sequence.
+
+Checking these curl-determining entries is fairly simple.  They only occur
+when
+\begin{itemize}
+\item $j$ is the index of a computed curl, and
+\item the curl at $M[0,j]=c$, and
+\item $c+1$ divides $j$ and the result is $i$, and
+\item row $i$, before column $j$, ends with $i$ values, the first of which is $c$ and the
+remaining are all $c+1$, and
+\item $j$ is minimized.
+\end{itemize}
+\ni In such cases, prepending the sequence with the value of $s=M[0,j-i]$
+will increase the computed curl value.
+
+Clearly, if a curl value is increased from $3$ to $4$, the result is a
+tail that terminates on the next step.  In some cases, of course, the original
+tail may have terminated just as quickly. (Consider $S=222$.  $\tail{S}=31$,
+and prepending a 2 causes $\tail{2S}=41$, which is no shorter, so $S$ is not
+rotten.  If $S'=333$, however, then $\tail{S'}=341$, while $\tail{3S'}=41$ which
+\term{is} shorter, so $S'$ is 3-rotten.)
 
 \end{document}
