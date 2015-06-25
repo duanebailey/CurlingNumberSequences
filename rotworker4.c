@@ -1,4 +1,3 @@
-#define ADLY
 /*
  * A dynamic-programming approach to computing curl with minimum recompute.
  * (c) 2015 duane a. bailey
@@ -205,31 +204,13 @@ void t_update(char *start, char *t)
       if (s[c] == 1) return;
     }
     // 2. If we've not hit 1, compute the column of repeat counts
-#ifdef COMMENT
-    int cb;
-    r = 1;
-    ch = s[c];
-    u = s+c;
-    for (r=1, cb = c-r; r <= c/2;cb--,r++) {
-      int rep = t[X(r,cb)]+1;
-      t[X(r,c)] = (ch == *--u)?rep:1;
-    }
-    for (; r <= c+1;r++) {
-      t[X(r,c)] = 1+(ch == *--u);
-    }
-#endif
     r = 1;
     char *p = t + N + c; // p points to t[1,c]
     u = s+c; // u points back r positions in string
     ch = s[c]; // *u to be compared with ch
     while (r <= c/2) {
       u--;
-#ifdef ADLY
-      *p = 1;
-      if (ch == *u) *p += p[-r];
-#else
       *p = (ch == *u) ? p[-r]+1 : 1;
-#endif
 
       r++;
       p += N; // p points to next row
@@ -296,9 +277,18 @@ int rotten(char *t, int start, char *t2)
     buffer[0] = result;
     strncpy(buffer+1,t,start);
     buffer[start+1] = '\0';
+    // sadly, we compute the tail of the possibly sequence
+    // happily, we don't do this frequently
     t_update(buffer,t2);
     free(buffer);
     if (strlen(t2)-1 < n) return result;
+    else {
+      char xxx[N];
+      strncpy(xxx,t,start);
+      xxx[start] = 0;
+      i2s(xxx);
+      printf("\nCounter example: %s.\n",xxx);
+    }
   }
   return 0;
 }
