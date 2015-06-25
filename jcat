@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+# Join all line appear in input (or in files listed on command line) together on a single line
+# e.g. jcat DATA/egs.48e DATA/egs.48 >DATA/egs.48e48
+import fileinput
+for line in fileinput.input():
+    print(line.strip(),end='')
+print()

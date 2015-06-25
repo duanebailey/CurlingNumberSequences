@@ -10,6 +10,7 @@ int seed = 1;
 int canonical = 0;
 int neut = 0;
 int length = 0;
+int terminal = 1;
 
 void Usage(char *pn)
 {
@@ -18,6 +19,7 @@ void Usage(char *pn)
   fprintf(stderr,"\n-l\tprint tail length\n");
   fprintf(stderr,"\t-s\tprint just the seed\n");
   fprintf(stderr,"\t-t\tprint just the tail\n");
+  fprintf(stderr,"\t-1\tdon't print terminal 1\n");
   fprintf(stderr,"\t-c\tprint values > 4 as 4\n");
   exit(1);
 }
@@ -44,6 +46,9 @@ void parseArgs(int argc, char **argv)
       case 's':
 	seed = 1; tail = 0;
 	break;
+      case '1':
+	terminal = 0;
+	break;
       default:
 	Usage(pn);
 	break;
@@ -55,7 +60,7 @@ void parseArgs(int argc, char **argv)
 int main(int argc, char **argv)
 {
   int n,a,l,i;
-  char val;
+  char val,c;
   char *v,*s;
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {
@@ -69,9 +74,15 @@ int main(int argc, char **argv)
       int nt = cneutral(s,l,n);
       printf("%d:",nt);
     }
+    if (s[n-1] == '1' && !terminal) {
+      n--;
+      s[n] = 0;
+    }
     for (i = 0; i < n; i++) {
       if ((i < l && seed) || ((i >= l) && tail)) {
-     	printf("%c",s[i]<='3' || !canonical ? s[i]:'4');
+	c = s[i];
+	if (canonical && c > 4) c = '4';
+     	printf("%c",c);
        } 
      }
      putchar('\n');

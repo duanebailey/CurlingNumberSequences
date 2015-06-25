@@ -355,6 +355,7 @@ int readints(char *line, int **bp, int *np)
 }
 
 int readstr(char *line, char **bp, int *np)
+// return number of digits in first number found in line
 {
   if (line == 0) return 0;
   int n;
