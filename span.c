@@ -6,10 +6,12 @@
 #include "utils.h"
 int ext = 0;
 int size = 0;
+int rep = 1;
 void Usage(char *pn)
 {
   fprintf(stderr,"Usage: %s [-e]\n",pn);
   fprintf(stderr,"\t-e\tGenerate extension of strings, first.\n");
+  fprintf(stderr,"\t-r\tPrint strings repeated, only.\n");
   fprintf(stderr,"\t-z\tPrint curl span sizes.\n");
   exit(1);
 }
@@ -21,6 +23,9 @@ void parseArgs(int argc, char **argv)
     char *arg = *argv;
     if (*arg == '-') {
       switch (*++arg) {
+      case 'r':
+	rep = 1;
+	break;
       case 'e':
 	ext = 1;
 	break;
@@ -53,29 +58,42 @@ int main(int argc, char **argv)
       v = ccurlext(v);
       n = strlen(v);
     }
-    printf("%s\n",v);
-    for (i = 0; i < n; i++) {
-      char c = ccurl(v,i);
-      if (c != v[i]) {
-	tab(i);
-	putchar('x');
-	putchar('\n');
-      } else {
-	int l=ccurlen(v,i);
-	int j;
-	int ic = (c-'0')*l; // the curl block size (less 1)
-	tab(i-ic);
-	for (j = 0; j < ic; j++) {
-	  if (j < l) putchar(v[i-ic+j]);
-	  else if ((i-ic+j)==(sn-1)) putchar('|');
-	  else if (j%l == 0) putchar('+');
-	  else if (((j%l)+1)%5 == 0) putchar('.');
-	  else putchar('-');
+    if (rep) {
+      for (i = 0; i < n; i++) {
+	char c = ccurl(v,i);
+	if (c == v[i]) {
+	  int l = ccurlen(v,i);
+	  char *s;
+	  if (size) printf("%3d:",l);
+	  printf("%s\n",s=strndup(v+i-l,l));
+	  free(s);
 	}
-	putchar(c);
-	if (size)
-	  printf(":%d",ic+1);
-	putchar('\n');
+      }
+    } else {
+      printf("%s\n",v);
+      for (i = 0; i < n; i++) {
+	char c = ccurl(v,i);
+	if (c != v[i]) {
+	  tab(i);
+	  putchar('x');
+	  putchar('\n');
+	} else {
+	  int l=ccurlen(v,i);
+	  int j;
+	  int ic = (c-'0')*l; // the curl block size (less 1)
+	  tab(i-ic);
+	  for (j = 0; j < ic; j++) {
+	    if (j < l) putchar(v[i-ic+j]);
+	    else if ((i-ic+j)==(sn-1)) putchar('|');
+	    else if (j%l == 0) putchar('+');
+	    else if (((j%l)+1)%5 == 0) putchar('.');
+	    else putchar('-');
+	  }
+	  putchar(c);
+	  if (size)
+	    printf(":%d",ic+1);
+	  putchar('\n');
+	}
       }
     }
   }

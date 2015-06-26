@@ -294,7 +294,7 @@ char *readline(FILE *f)
     }
     *bp++ = c;
   }
-  return buffer;
+  return ((c == EOF) && (bp = buffer)) ? 0 : buffer;
 }
 
 char *readline2(FILE *f)
