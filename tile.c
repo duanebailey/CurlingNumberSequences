@@ -94,17 +94,12 @@ dict *readDict(char *dictFile)
     pr->strl = strlen(p);
     if (d->size == d->alloc) {
       d->alloc *= 2;
-      d->entry = (pair**)calloc(d->alloc,sizeof(pair*));
+      d->entry = (pair**)realloc(d->entry,d->alloc*sizeof(pair*));
     }
     d->entry[d->size++] = pr;
   }
   
-  int i;
   qsort(d->entry,d->size,sizeof(pair*),ecmp);
-  printf("Found %d dictionary entries:\n",d->size);
-  for (i = 0; i < d->size; i++) {
-    printf("%s = '%s'\n",d->entry[i]->sym, d->entry[i]->str);
-  }
   return d;
 }
 
@@ -129,7 +124,7 @@ int main(int argc, char **argv)
     int l = strlen(s);
     int i = 0;
     while (i < l) {
-      int e = see(s,d);
+      int e = see(s+i,d);
       if (e == -1) {
 	printf("%c",s[i++]);
       } else {
