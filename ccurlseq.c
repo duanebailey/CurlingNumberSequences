@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 {
   int n,a,l,i;
   char val,c;
-  char *v,*s;
+  char *v=0,*s;
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {
     l = n; // start length

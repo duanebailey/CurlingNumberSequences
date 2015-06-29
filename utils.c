@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#define CHUNK (100*BUFSIZ)
+#define CHUNK BUFSIZ
 #include "utils.h"
 
 char M[MAX][MAX];

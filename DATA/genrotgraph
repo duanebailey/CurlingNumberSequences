@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Generate a graph of number of rotten sequences.
+
+wc -l rotten-?? | awk '/total/{next;}
+{print substr($2,8,2)+0,$1;}' >rotten.dat
+gnuplot <<EOF
+set terminal "postscript"
+set output "rotten.ps"
+set xrange [0:50]
+set yrange [0:10000]
+set key off
+set title "Number of rotten start sequences of length n"
+set xlabel "n"
+set ylabel "rotten sequence count"
+plot "rotten.dat" using 1:2
+quit
+EOF
+ps2pdf rotten.ps
+open rotten.pdf

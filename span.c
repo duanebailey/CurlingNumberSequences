@@ -7,11 +7,13 @@
 int ext = 0;
 int size = 0;
 int rep = 0;
+int noTab = 0;
 void Usage(char *pn)
 {
   fprintf(stderr,"Usage: %s [-e]\n",pn);
   fprintf(stderr,"\t-e\tGenerate extension of strings, first.\n");
   fprintf(stderr,"\t-r\tPrint strings repeated, only.\n");
+  fprintf(stderr,"\t-n\tDo not tab lines into position.\n");
   fprintf(stderr,"\t-z\tPrint curl span sizes.\n");
   exit(1);
 }
@@ -22,27 +24,35 @@ void parseArgs(int argc, char **argv)
   while (argv++,--argc) {
     char *arg = *argv;
     if (*arg == '-') {
-      switch (*++arg) {
-      case 'r':
-	rep = 1;
-	break;
-      case 'e':
-	ext = 1;
-	break;
-      case 'z':
-	size = 1;
-	break;
-      default:
-	Usage(pn);
-	break;
+      char ch;
+      while ((ch = *++arg)) {
+	  switch (ch) {
+	  case 'r':
+	    rep = 1;
+	    break;
+	  case 'e':
+	    ext = 1;
+	    break;
+	  case 'n':
+	    noTab = 1;
+	    break;
+	  case 'z':
+	    size = 1;
+	    break;
+	  default:
+	    Usage(pn);
+	    break;
+	  }
       }
     }
   }
 }
 
+
 void tab(int i)
 {
   int j;
+  if (noTab) return;
   for (j = 0; j < i; j++) {
     putchar(' ');
   }
@@ -70,9 +80,10 @@ int main(int argc, char **argv)
 	}
       }
     } else {
-      printf("%s\n",v);
+      if (!noTab) printf("%s\n",v);
       for (i = 0; i < n; i++) {
 	char c = ccurl(v,i);
+	if (noTab) printf("%d:",i+1);
 	if (c != v[i]) {
 	  tab(i);
 	  putchar('x');
