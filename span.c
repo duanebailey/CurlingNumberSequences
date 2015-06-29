@@ -6,7 +6,7 @@
 #include "utils.h"
 int ext = 0;
 int size = 0;
-int rep = 1;
+int rep = 0;
 void Usage(char *pn)
 {
   fprintf(stderr,"Usage: %s [-e]\n",pn);

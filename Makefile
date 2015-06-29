@@ -1,5 +1,11 @@
-TARGETS=quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile
+TARGETS=quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile expand flaws
 all:	$(TARGETS)
+
+flaws:	flaws.c utils.c
+	gcc -g -o flaws flaws.c utils.c
+
+expand:	expand.c utils.c
+	gcc -g -o expand expand.c utils.c
 
 pop:	pop.c utils.c
 	gcc -g -o pop pop.c utils.c
