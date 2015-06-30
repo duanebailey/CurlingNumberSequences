@@ -268,6 +268,37 @@ char *buffer = 0;
 int bufsiz = 0;
 char *readline(FILE *f)
 {
+  if (!buffer) {
+    bufsiz = BUFSIZ;
+    buffer = (char*)malloc(bufsiz);
+    if (!buffer) {
+      perror("Allocation of readline buffer.");
+      exit(1);
+    }
+  }
+  char *bp = buffer;
+  int c;
+  for (;;) {
+    c = fgetc(f);
+    if (bp-buffer >= bufsiz) {
+      bufsiz = (bp-buffer)*2;
+      buffer = (char*)realloc(buffer,bufsiz);
+      if (!buffer) {
+	perror("Reallocation of readline buffer.");
+	exit(1);
+      }
+    }
+    if (c == EOF || c == '\n') {
+      *bp = '\0';
+      break;
+    }
+    *bp++ = c;
+  }
+  return ((c == EOF) && (bp = buffer)) ? 0 : buffer;
+}
+
+char *readline2(FILE *f)
+{
   char *bp;
   int i, l;
   if (buffer == 0) {
@@ -324,6 +355,7 @@ int readints(char *line, int **bp, int *np)
 }
 
 int readstr(char *line, char **bp, int *np)
+// return number of digits in first number found in line
 {
   if (line == 0) return 0;
   int n;
