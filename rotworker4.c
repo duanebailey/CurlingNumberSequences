@@ -293,7 +293,7 @@ int rotten(char *t, int start, char *t2)
   return 0;
 }
 
-inline void inc(char *s)
+void inc(char *s)
 {
   char *p = s+(nbits-1);
   while (p >= s) {
