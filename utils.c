@@ -264,9 +264,14 @@ int neutral(int a[], int start, int n)
   return result;
 }
 
-char *buffer = 0;
-int bufsiz = 0;
+/* Support for readline */
+static char *buffer = 0;
+static int bufsiz = 0;
+
 char *readline(FILE *f)
+/*
+ * Read in a line of characters.  Ultimate is unbounded.
+ */
 {
   if (!buffer) {
     bufsiz = BUFSIZ;
@@ -280,13 +285,16 @@ char *readline(FILE *f)
   int c;
   for (;;) {
     c = fgetc(f);
+    if (c == ' ') continue;
     if (bp-buffer >= bufsiz) {
+      int l = bp-buffer;
       bufsiz = (bp-buffer)*2;
       buffer = (char*)realloc(buffer,bufsiz);
       if (!buffer) {
 	perror("Reallocation of readline buffer.");
 	exit(1);
       }
+      bp = buffer+l;
     }
     if (c == EOF || c == '\n') {
       *bp = '\0';
