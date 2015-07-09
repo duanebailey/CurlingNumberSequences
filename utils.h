@@ -4,6 +4,7 @@
 #define MAX 500
 extern char M[MAX][MAX];
 extern int ncmp(int *ap, int *bp, int n);
+extern char* curls(char *s);
 extern int curl(int a[], int n);
 extern int neutral(int a[], int start, int n);
 extern char ccurl(char *a, int n);

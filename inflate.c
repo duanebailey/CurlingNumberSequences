@@ -5,10 +5,13 @@
 #include <string.h>
 #include "utils.h"
 int N = 1;
+int right = 1;
 void Usage(char *pn)
 {
-  fprintf(stderr,"Usage: %s [-n count]\n",pn);
+  fprintf(stderr,"Usage: %s [-r] [-n count]\n",pn);
   fprintf(stderr,"\t-n\texpand count times (currently %d).\n",N);
+  fprintf(stderr,"\t-r\tright-handed expansion.\n");
+  fprintf(stderr,"\t-l\tleft-handed expansion.\n");
   exit(1);
 }
 
@@ -21,6 +24,12 @@ void parseArgs(int argc, char **argv)
       switch (*++arg) {
       case 'n':
 	N = atoi(*++argv); argc--;
+	break;
+      case 'l':
+	right = 0;
+	break;
+      case 'r':
+	right = 1;
 	break;
       default:
 	Usage(pn);
@@ -37,7 +46,7 @@ char *expand(char *s)
   char *bp = buffer;
   int i;
   for (i = 0; i < l; i++) {
-    if (s[i] == '2') { strcpy(bp,"2232"); bp += 4; }
+    if (s[i] == '2') { strcpy(bp,right?"2232":"2322"); bp += 4; }
     else if (s[i] == '3') { strcpy(bp,"322232223"); bp += 9; }
     else { strcpy(bp,"x"); bp++; }
   }

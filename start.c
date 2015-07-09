@@ -49,17 +49,6 @@ void inc(char *base)
   base[sl] = 0;
 }
 
-char *curls(char *s)
-{
-  int n = strlen(s);
-  char *cprofile = (char*)calloc(1,n+1);
-  int i;
-  for (i = 0; i < n; i++) {
-    cprofile[i] = ccurl(s,i);
-  }
-  return cprofile;
-}
-
 int rightmostFlaw(char *s, char *t)
 {
   int sl = strlen(s);
