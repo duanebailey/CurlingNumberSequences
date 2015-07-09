@@ -1,11 +1,14 @@
-TARGETS=quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile expand flaws
+TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws
 all:	$(TARGETS)
 
 flaws:	flaws.c utils.c
 	gcc -g -o flaws flaws.c utils.c
 
-expand:	expand.c utils.c
-	gcc -g -o expand expand.c utils.c
+project:	project.c utils.c
+	gcc -g -o project project.c utils.c -lm
+
+inflate:	inflate.c utils.c
+	gcc -g -o inflate inflate.c utils.c
 
 pop:	pop.c utils.c
 	gcc -g -o pop pop.c utils.c
