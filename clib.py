@@ -43,10 +43,6 @@ def infGen(i):
 def candidates(i):
     """Searches for candidates for A-like and B-like strings"""
     for s in bruteForceGen(i):
-        if s[0] == 3 and s[-1] == 3:
-            if cn(s) < 3 and not "33" in l2s(s):
-                #print("B-like: {}".format(l2s(s)))
-                continue
         if s[0] == 2: #and s[-1] == 2:
             #2s on the end must add up to 3
             #if (s[1] == 2 and s[2] == 3 and s[-2] == 3) or (s[1] == 3 and s[-2] == 2 and s[-3] == 3):
@@ -92,6 +88,11 @@ def listFromInt(l, n):
 def bruteForceTree():
     """Unused helper function for a possibly more efficient version of back"""
     return [0, [2],[3]]
+def isSelfRep(s):
+    """Determines if a sequence is self replicating"""
+    t = tail(s)
+    return l2s(t).count(l2s(s)) > 1
+        
 def selfrep(i):
     """Finds all strings s that contain themselves in their tail
     takes an integer i = the length to start at"""
@@ -141,15 +142,16 @@ def expandFormat(s):
         count2 = len([x for x in t if x == 2])
         count3 = len([x for x in t if x == 3])
         print(str(i) + " | "+ str(len(t)) + " | " + str(count2/count3))
-def flawlessGen(i = 1):
-    for l in bruteForceGen(i):
+def flawlessGen(i = 1, silent = False):
+    for l in bruteForceGen(i, silent):
         s = s2l(recur(l2s(l)))
         yield s
-def bruteForceGen(i = 1):
+def bruteForceGen(i = 1, silent = False):
     size = i
     while True:
         size += 1
-        print(size)
+        if not silent:
+            print(size)
         for result in bruteForceList(size):
             yield result
 def sublists(s):
@@ -183,7 +185,7 @@ def findWords(s):
                         continue
                     diff = len(s) - len(sCpy)
                     sCpy = sCpy[1:]
-                    if diff < 10 or diff > len(s) - 10:
+                    if diff < 7 or diff > len(s) - 7:
                         valid = False
                         break
                 if valid and len(a) + len(b) < len(s) and not (a, b) in results:
@@ -292,6 +294,21 @@ def backFlawless(s):
     for test in flawlessGen():
         if validBackward(test, s) and not isWeak(test): 
             print(l2s(test))
+def backFlawlessLimit(s):
+    """Combination of back and backFlawless - returns all results below length 16"""
+    result = []
+    for test in flawlessGen(0, True):
+        if(validBackward(test, s) and not isWeak(test)):
+            result.append(l2s(test))
+        if len(abstract(l2s(test))) > 10:
+            return result
+def backLimit(s):
+    result = []
+    for test in bruteForceGen(0, True):
+        if(validBackward(test, s) and not isWeak(test)):
+            result.append(l2s(test))
+        if len(l2s(test)) > 10:
+            return result
 def backMax(s):
     """Version of back that will continue, checking isWeak, trying to find the max starting sequence"""
     for test in bruteForceGen():
@@ -327,7 +344,7 @@ def naturalVisual(s):
     """Returns a visual representation of the distribution of natural
     X represents natural digits, - represents non-natural"""
     print(l2s(s))
-    print(abstractVisual(l2s(s)))
+    #print(abstractVisual(l2s(s)))
     r = "-"
     for i in range(1, len(s)):
         r += "X" if cn(s[:i]) == s[i] else "-"
@@ -448,6 +465,35 @@ def contRecur(s):
     for i in range(int(input("Repetitions: "))):
         s = modRecur(s)
         print(s)
+def analyze(s):
+    """Runs a battery of tests and gives all possible information for s"""
+    l = s2l(s)
+    print("Analysis of sequence {}".format(s))
+    print("Tail: {}".format(l2s(tail(l))))
+    print("Tail length: {}".format(l2s(tail(l))))
+    print("The following sequences below length 11 produce this sequence as a tail: {}".format(backLimit(l)))
+    print("The following sequences with an A-B length < 11 produce this sequence as a tail: {}".format(backFlawlessLimit(l)))
+    print("This sequence is {} weak".format("" if isWeak(l) else "NOT"))
+    print("Natural digits in this sequence: ")
+    print(naturalVisual(l))
+    print("Expansion of this sequence: {}".format(recur(s)))
+    print("Abstraction of this sequence: {}".format(abstract(s)))
+    print("Formatted abstraction:")
+    print(s)
+    print(abstractVisual(s))
+    r = rotten(l)
+    if r != 0:
+        print("This sequence is {} rotten".format(r))
+        print("The tail of the rotten sequence diverges from this sequence at digit {}".format(rottenDiverge(l)))
+    else:
+        print("This sequence is NOT rotten")
+    repeat = repeats(s)
+    if repeat != "":
+        print("The string {} is repeated".format(repeat))
+    print("This sequence is {} self replicating".format("" if isSelfRep(l) else "NOT"))
+    print("Dependency matrix for the tail of this sequence:")
+    depend(l, len(s))
+    
 if __name__ == "__main__":
     prgm = sys.argv[1]
     while True:
@@ -467,7 +513,7 @@ if __name__ == "__main__":
             print("natural-v - visualizes which digits satisfy natural")
             print("recur - expands a sequence using 2=2322 and 3 = 322232223")
             print("depend - graphic of which digits each digit in tail depends on.")
-            print("abstract - opposite of recur")
+            print("abstract- opposite of recur")
             print("modrecur - version of recur that replaces solo '2'")
             print("contrecur - modrecur repeated")
             print("rotten - determines if a sequence is rotten and returns the prefix that shortens it plus the original sequence")
@@ -480,9 +526,12 @@ if __name__ == "__main__":
             print("backinf - version of back using inf")
             print("findWords - will search a string for two words, such as A and B, which could make up the string recursively")
             print("candidates - will search for strings that match properties conjectured to be posessed by A-like and B-like strings")
+            print("analyze - will run a battery of tests on a sequence and print the results")
             
             exit()
         data = input("")
+        if prgm == "analyze":
+            analyze(data)
         if prgm == "findWords":
             findWords(s2l(data))
         if prgm == "candidates":
