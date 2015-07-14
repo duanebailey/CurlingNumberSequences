@@ -45,9 +45,11 @@ int uniq(char **a, int n)
 {
   char **inp, **outp;
   int i;
-  for (i = 0; i < n; i++) {
+  if (n <= 1) return n;
+  inp = outp = a+1;
+  while ((inp-a) < n) {
     if (strcmp(*inp,*outp)) {
-      outp++;
+      *++outp = *inp;
     }
     inp++;
   }
@@ -88,7 +90,7 @@ int main(int argc, char **argv)
     }
     n = suniq(strings,n);
     for (i = 0; i < n; i++) {
-      puts(strings[i]);
+      printf("%s %s\n",strings[i],patch);
       free(strings[i]);
     }
   }
