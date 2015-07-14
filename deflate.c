@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 	if (BA) {
 	  v2 = parse(v,BA);
 	} else {
-	  fprintf(stderr,"No starting location found.\n");
+	  printf("No starting location found.\n");
 	  continue;
 	}
       }
