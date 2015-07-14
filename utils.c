@@ -381,7 +381,7 @@ int readstr(char *line, char **bp, int *np)
   char *b = (char*)malloc(strlen(line)+1);
   char *in=line,*out=b;
   while (*in) {
-    if (isdigit(*in)) *out++ = *in;
+    if (isalnum(*in)) *out++ = *in;
     in++;
   }
   *out++ = '\0';
