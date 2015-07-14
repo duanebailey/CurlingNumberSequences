@@ -8,13 +8,16 @@ int ext = 0;
 int size = 0;
 int rep = 0;
 int noTab = 0;
+int intrude=0;
 void Usage(char *pn)
 {
-  fprintf(stderr,"Usage: %s [-e]\n",pn);
+  fprintf(stderr,"Usage: %s [-eirnz]\n",pn);
   fprintf(stderr,"\t-e\tGenerate extension of strings, first.\n");
+  fprintf(stderr,"\t-i\tPrint only spans that intrude into flawed region.\n");
   fprintf(stderr,"\t-r\tPrint strings repeated, only.\n");
   fprintf(stderr,"\t-n\tDo not tab lines into position.\n");
   fprintf(stderr,"\t-z\tPrint curl span sizes.\n");
+
   exit(1);
 }
 
@@ -29,6 +32,9 @@ void parseArgs(int argc, char **argv)
 	  switch (ch) {
 	  case 'r':
 	    rep = 1;
+	    break;
+	  case 'i':
+	    intrude = 1;
 	    break;
 	  case 'e':
 	    ext = 1;
@@ -64,46 +70,52 @@ int main(int argc, char **argv)
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {
     int sn = n;
+    int fault = -1;
+    char *cls;
     if (ext) {
       v = ccurlext(v);
       n = strlen(v);
     }
+    cls = curls(v);
+    for (i = 0; i < n; i++) {
+      if (cls[i] != v[i]) fault = i;
+    }
     if (rep) {
       for (i = 0; i < n; i++) {
-	char c = ccurl(v,i);
-	if (c == v[i]) {
+	if (cls[i] == v[i]) {
 	  int l = ccurlen(v,i);
 	  char *s;
-	  if (size) printf("%3d:",l);
-	  printf("%s\n",s=strndup(v+i-l,l));
+	  printf("%s@%d\n",s=strndup(v+i-l,l),i+1);
 	  free(s);
 	}
       }
     } else {
-      if (!noTab) printf("%s\n",v);
       for (i = 0; i < n; i++) {
-	char c = ccurl(v,i);
-	if (noTab) printf("%d:",i+1);
-	if (c != v[i]) {
+	if (intrude && i <= fault) continue;
+	if (cls[i] != v[i]) {
 	  tab(i);
 	  putchar('x');
+	  printf("@%d",i+1);
 	  putchar('\n');
 	} else {
 	  int l=ccurlen(v,i);
 	  int j;
-	  int ic = (c-'0')*l; // the curl block size (less 1)
-	  tab(i-ic);
-	  for (j = 0; j < ic; j++) {
-	    if (j < l) putchar(v[i-ic+j]);
-	    else if ((i-ic+j)==(sn-1)) putchar('|');
-	    else if (j%l == 0) putchar('+');
-	    else if (((j%l)+1)%5 == 0) putchar('.');
-	    else putchar('-');
+	  int ic = (cls[i]-'0')*l; // the curl block size (less 1)
+	  if (i-ic <= fault || (!intrude)) {
+	    tab(i-ic);
+	    for (j = 0; j < ic; j++) {
+	      if (j < l) putchar(v[i-ic+j]);
+	      else if ((i-ic+j)==(sn-1)) putchar('|');
+	      else if (j%l == 0) putchar('+');
+	      else if (((j%l)+1)%5 == 0) putchar('.');
+	      else putchar('-');
+	    }
+	    putchar(cls[i]);
+	    if (size)
+	      printf(":%d",ic+1);
+	    printf("@%d",i+1);
+	    putchar('\n');
 	  }
-	  putchar(c);
-	  if (size)
-	    printf(":%d",ic+1);
-	  putchar('\n');
 	}
       }
     }

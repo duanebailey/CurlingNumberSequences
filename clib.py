@@ -43,10 +43,6 @@ def infGen(i):
 def candidates(i):
     """Searches for candidates for A-like and B-like strings"""
     for s in bruteForceGen(i):
-        if s[0] == 3 and s[-1] == 3:
-            if cn(s) < 3 and not "33" in l2s(s):
-                #print("B-like: {}".format(l2s(s)))
-                continue
         if s[0] == 2: #and s[-1] == 2:
             #2s on the end must add up to 3
             #if (s[1] == 2 and s[2] == 3 and s[-2] == 3) or (s[1] == 3 and s[-2] == 2 and s[-3] == 3):
@@ -92,6 +88,11 @@ def listFromInt(l, n):
 def bruteForceTree():
     """Unused helper function for a possibly more efficient version of back"""
     return [0, [2],[3]]
+def isSelfRep(s):
+    """Determines if a sequence is self replicating"""
+    t = tail(s)
+    return l2s(t).count(l2s(s)) > 1
+        
 def selfrep(i):
     """Finds all strings s that contain themselves in their tail
     takes an integer i = the length to start at"""
@@ -141,15 +142,16 @@ def expandFormat(s):
         count2 = len([x for x in t if x == 2])
         count3 = len([x for x in t if x == 3])
         print(str(i) + " | "+ str(len(t)) + " | " + str(count2/count3))
-def flawlessGen(i = 1):
-    for l in bruteForceGen(i):
+def flawlessGen(i = 1, silent = False):
+    for l in bruteForceGen(i, silent):
         s = s2l(recur(l2s(l)))
         yield s
-def bruteForceGen(i = 1):
+def bruteForceGen(i = 1, silent = False):
     size = i
     while True:
         size += 1
-        print(size)
+        if not silent:
+            print(size)
         for result in bruteForceList(size):
             yield result
 def sublists(s):
@@ -183,7 +185,7 @@ def findWords(s):
                         continue
                     diff = len(s) - len(sCpy)
                     sCpy = sCpy[1:]
-                    if diff < 10 or diff > len(s) - 10:
+                    if diff < 7 or diff > len(s) - 7:
                         valid = False
                         break
                 if valid and len(a) + len(b) < len(s) and not (a, b) in results:
@@ -249,6 +251,20 @@ def rottenDiverge(s):
             #Note that the output isn't zero-indexed
             return i + len(s) + 1
     return -1
+def rottenDivergeRelative(s):
+    """Version of rottenDiverge that doens't add on the length of the starting sequence"""
+    t = tail(s)
+    r = tail([rotten(s)] + s)
+    for i in range(len(t)):
+        if r[i] != t[i]:
+            #Note that the output isn't zero-indexed
+            return i + 1
+def rottenDivFilter(s):
+    """Re-prints those sequences where rottenDiverge %2 == 0 and %3 != 0"""
+    n = rottenDivergeRelative(s)
+    if n > 20 and  n < 51:
+        print(l2s(s))
+
 def tailIntersperse(seq):
     """Version of tail that formats the output nicely in two ways
     First, it intersperses s with the tail, seperating each group with newlines
@@ -287,11 +303,30 @@ def repeats(s):
     
 def isWeak(s):
     return tail(s) == tail(s[1:])
+def isWeakFront(s):
+    if s[-1] != cn(s[:-1]):
+        print(l2s(s))
+
 def backFlawless(s):
     """Version of backMax that will append only strings made of A and B"""
     for test in flawlessGen():
         if validBackward(test, s) and not isWeak(test): 
             print(l2s(test))
+def backFlawlessLimit(s):
+    """Combination of back and backFlawless - returns all results below length 16"""
+    result = []
+    for test in flawlessGen(0, True):
+        if(validBackward(test, s) and not isWeak(test)):
+            result.append(l2s(test))
+        if len(abstract(l2s(test))) > 10:
+            return result
+def backLimit(s):
+    result = []
+    for test in bruteForceGen(0, True):
+        if(validBackward(test, s) and not isWeak(test)):
+            result.append(l2s(test))
+        if len(l2s(test)) > 10:
+            return result
 def backMax(s):
     """Version of back that will continue, checking isWeak, trying to find the max starting sequence"""
     for test in bruteForceGen():
@@ -327,7 +362,7 @@ def naturalVisual(s):
     """Returns a visual representation of the distribution of natural
     X represents natural digits, - represents non-natural"""
     print(l2s(s))
-    print(abstractVisual(l2s(s)))
+    #print(abstractVisual(l2s(s)))
     r = "-"
     for i in range(1, len(s)):
         r += "X" if cn(s[:i]) == s[i] else "-"
@@ -448,6 +483,35 @@ def contRecur(s):
     for i in range(int(input("Repetitions: "))):
         s = modRecur(s)
         print(s)
+def analyze(s):
+    """Runs a battery of tests and gives all possible information for s"""
+    l = s2l(s)
+    print("Analysis of sequence {}".format(s))
+    print("Tail: {}".format(l2s(tail(l))))
+    print("Tail length: {}".format(len(l2s(tail(l)))))
+    print("The following sequences below length 11 produce this sequence as a tail: {}".format(backLimit(l)))
+    print("The following sequences with an A-B length < 11 produce this sequence as a tail: {}".format(backFlawlessLimit(l)))
+    print("This sequence is {} weak".format("" if isWeak(l) else "NOT"))
+    print("Natural digits in this sequence: ")
+    print(naturalVisual(l))
+    print("Expansion of this sequence: {}".format(recur(s)))
+    print("Abstraction of this sequence: {}".format(abstract(s)))
+    print("Formatted abstraction:")
+    print(s)
+    print(abstractVisual(s))
+    r = rotten(l)
+    if r != 0:
+        print("This sequence is {} rotten".format(r))
+        print("The tail of the rotten sequence diverges from this sequence at digit {}".format(rottenDiverge(l)))
+    else:
+        print("This sequence is NOT rotten")
+    repeat = repeats(s)
+    if repeat != "":
+        print("The string {} is repeated".format(repeat))
+    print("This sequence is {} self replicating".format("" if isSelfRep(l) else "NOT"))
+    print("Dependency matrix for the tail of this sequence:")
+    depend(l, len(s))
+    
 if __name__ == "__main__":
     prgm = sys.argv[1]
     while True:
@@ -467,12 +531,13 @@ if __name__ == "__main__":
             print("natural-v - visualizes which digits satisfy natural")
             print("recur - expands a sequence using 2=2322 and 3 = 322232223")
             print("depend - graphic of which digits each digit in tail depends on.")
-            print("abstract - opposite of recur")
+            print("abstract- opposite of recur")
             print("modrecur - version of recur that replaces solo '2'")
             print("contrecur - modrecur repeated")
-            print("rotten - determines if a sequence is rotten and returns the prefix that shortens it plus the original sequence")
+            print("rotten - determines if a sequence is rotten and returns the prefix that shortens it")
             print("abstractab - Version of abstract with 'A' and 'B' instead of numbers")
             print("rottenDiv - determines the index of the place where the tail diverges from the rotten version of the tail")
+            print("rottenDivRel - version of rottenDiv that will not add in the length of the starting sequence")
             print("repeats - prints an initial sequence that is repeated at least once in a string, if such a sequence exists")
             print("bab - searches for flawless sequences which contain BAB in their tail")
             print("double - prints 'double' if a sequence is rotten")
@@ -480,9 +545,19 @@ if __name__ == "__main__":
             print("backinf - version of back using inf")
             print("findWords - will search a string for two words, such as A and B, which could make up the string recursively")
             print("candidates - will search for strings that match properties conjectured to be posessed by A-like and B-like strings")
-            
+            print("analyze - will run a battery of tests on a sequence and print the results")
+            print("rottenDivFiler - filters out those sequences where rottenDiv % 2 == 0")
+            print("weakFront - reprints the sequence if the last digit of the sequence does NOT follow naturally from the preceding")
             exit()
         data = input("")
+        if prgm == "weakFront":
+            isWeakFront(s2l(data))
+        if prgm == "rottenDivRel":
+            print(rottenDivergeRelative(s2l(data)))
+        if prgm == "rottenDivFilter":
+            rottenDivFilter(s2l(data))
+        if prgm == "analyze":
+            analyze(data)
         if prgm == "findWords":
             findWords(s2l(data))
         if prgm == "candidates":
@@ -516,7 +591,7 @@ if __name__ == "__main__":
         if prgm == "selfreplong":
             selfrepl(int(data))
         if prgm == "rotten":
-            print(l2s(rottenInc(s2l(data))))
+            print(rotten(s2l(data)))
         if prgm == "cs59":
             print(contS60(s2l(data)))
         if data == 'out':

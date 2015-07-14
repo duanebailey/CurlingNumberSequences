@@ -1,5 +1,8 @@
-TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws
+TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws diffs deflate
 all:	$(TARGETS)
+
+diffs:	diffs.c
+	gcc -o diffs diffs.c
 
 flaws:	flaws.c utils.c
 	gcc -g -o flaws flaws.c utils.c
@@ -9,6 +12,9 @@ project:	project.c utils.c
 
 inflate:	inflate.c utils.c
 	gcc -g -o inflate inflate.c utils.c
+
+deflate:	deflate.c utils.c
+	gcc -g -o deflate deflate.c utils.c
 
 pop:	pop.c utils.c
 	gcc -g -o pop pop.c utils.c
@@ -50,7 +56,7 @@ curlseq:	curlseq.c utils.o
 	gcc -o curlseq curlseq.c utils.o
 
 ccurlseq:	ccurlseq.c utils.o
-	gcc -o ccurlseq ccurlseq.c utils.o
+	gcc -g -o ccurlseq ccurlseq.c utils.o
 
 choose:	choose.c
 	gcc -o choose choose.c

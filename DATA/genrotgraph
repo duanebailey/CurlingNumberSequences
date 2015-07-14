@@ -7,7 +7,7 @@ gnuplot <<EOF
 set terminal "postscript"
 set output "rotten.ps"
 set xrange [0:50]
-set yrange [0:15000]
+set yrange [0:20000]
 set key off
 set title "Number of rotten start sequences of length n"
 set xlabel "n"
