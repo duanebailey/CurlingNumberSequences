@@ -113,7 +113,11 @@ int main(int argc, char **argv)
 	    putchar(cls[i]);
 	    if (size)
 	      printf(":%d",ic+1);
-	    printf("@%d",i+1);
+            if (intrude) {
+	      printf("@%d:%d%s",i+1-ic,i+1,(i+1-ic ==1)?"*":"");
+	    }else {
+	      printf("@%d",i+1);
+	    }
 	    putchar('\n');
 	  }
 	}
