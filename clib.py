@@ -21,6 +21,9 @@ def bruteForceList(l):
         result.append(l2)
         result.append(l3)
     return result
+def bruteForcePrint(i):
+    for l in bruteForceList(i):
+        print(l2s(l))
 def bruteForceUpTo(l):
     result = []
     for i in range(1, l):
@@ -239,6 +242,14 @@ def rotten(s):
         if len(tail(s)) > len(tail([prefix] + s)):
             return prefix
     return 0
+def rottenDrasticFilter(s):
+    """Re-prints all sequences where a prefix decreases the tail by more than sys.argv[2]"""
+    offset = int(sys.argv[2])
+    if rottenDiff(s) > offset:
+        print(l2s(s))
+def rottenDiff(s):
+    shortened = [rotten(s)] + s
+    return len(tail(s)) - len(tail(shortened))
 def rottenInc(s):
     """Returns rotten(s) + s"""
     return [rotten(s)] + s
@@ -290,7 +301,8 @@ def validBackward(test, s):
     return True
 
 def s2l(s):
-    return [int(i) for i in s]
+    sFiltered = s.replace(" ", "")
+    return [int(i) for i in sFiltered]
 
 def l2s(l):
     return ''.join([str(x) for x in l])
@@ -303,6 +315,10 @@ def repeats(s):
     
 def isWeak(s):
     return tail(s) == tail(s[1:])
+
+def weakFilter(s):
+    if not isWeak(s):
+        print(l2s(s))
 def isWeakFront(s):
     if s[-1] != cn(s[:-1]):
         print(l2s(s))
@@ -455,6 +471,15 @@ def recur(s):
         if c == '3':
             result += '322232223'
     return result
+def recurFlexible(s, A, B):
+    """Version of recur using user supplied values for A and B"""
+    result = ""
+    for c in s:
+        if c == '2':
+            result += A
+        if c == '3':
+            result += B
+    return result
 def abstractVisual(s):
     a = abstract(s)
     r = ""
@@ -463,6 +488,21 @@ def abstractVisual(s):
         l = len(recur(c)) -1
         r += " " * l
     return r
+def infExt(s):
+    """Given a starting string s, it will repeatedly 'save' the tail from destruction by replacing the terminal '1' with a '2'"""
+    max = 150
+    while True:
+        t = tail(s)
+        s = s + t
+        if s[-2] == 4:
+            s[-2] = 3
+            s.pop(-1)
+        else:
+            s[-1] = 2
+        print(str(len(t)) + " : " + str(len(s)))
+        if len(t) > max:
+            max = len(t)
+            print("Starting Sequence: {} - Tail {}".format(l2s(s), l2s(t)))
 def modRecur(s):
     """version of recur that attemps to get rid of single 2s"""
     s = recur(s)
@@ -548,8 +588,23 @@ if __name__ == "__main__":
             print("analyze - will run a battery of tests on a sequence and print the results")
             print("rottenDivFiler - filters out those sequences where rottenDiv % 2 == 0")
             print("weakFront - reprints the sequence if the last digit of the sequence does NOT follow naturally from the preceding")
+            print("rottenDrasticFilter - filters out the rotten sequences where the reduction in length is greater than the second argument passed into the program")
+            print("rottenDiff - returns the amount by which the tail of a rotten sequence is shortened")
+            print("weakFilter - will only reprint input if the string is strong")
+            print("all - will generate all sequences of a given length")
+            print("infExt - will try to expand a starting sequence forever by saving it from destruction")
             exit()
         data = input("")
+        if prgm == "infExt":
+            infExt(s2l(data))
+        if prgm == "all":
+            bruteForcePrint(int(data))
+        if prgm == "weakFilter":
+            weakFilter(s2l(data))
+        if prgm == "rottenDiff":
+            print(rottenDiff(s2l(data)))
+        if prgm == "rottenDrasticFilter":
+            rottenDrasticFilter(s2l(data))
         if prgm == "weakFront":
             isWeakFront(s2l(data))
         if prgm == "rottenDivRel":
