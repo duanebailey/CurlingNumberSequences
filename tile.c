@@ -72,7 +72,6 @@ dict *readDict(char *dictFile)
 {
   FILE *f = fopen(dictFile,"r");
   char *buffer;
-  int l;
   dict *d;
   d = (dict*)calloc(1,sizeof(dict));
   d->size = 0;
@@ -107,7 +106,6 @@ int see(char *s, dict *d)
 {
   int i;
   for (i = d->size-1; i >= 0; i--) {
-    int l = d->entry[i]->strl;
     if (0 == strncmp(s,d->entry[i]->str,d->entry[i]->strl)) break;
   }
   return i;

@@ -60,7 +60,7 @@ void p(long n, int d)
 
 int main(int argc, char **argv)
 {
-  int j,k,dig, wit;
+  int j,k, wit;
   long max, halfmax, mask, i, ib, ibar,m1,m2,m3,m,t;
 
   parseArgs(argc,argv);

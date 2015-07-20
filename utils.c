@@ -284,6 +284,7 @@ char *readline(FILE *f)
  * Read in a line of characters.  Ultimate is unbounded.
  */
 {
+ top:
   if (!buffer) {
     bufsiz = BUFSIZ;
     buffer = (char*)malloc(bufsiz);
@@ -313,6 +314,7 @@ char *readline(FILE *f)
     }
     *bp++ = c;
   }
+  if (bp != buffer && buffer[0] == '#') goto top;
   return ((c == EOF) && (bp = buffer)) ? 0 : buffer;
 }
 

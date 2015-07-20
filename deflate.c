@@ -52,7 +52,7 @@ char *parse(char *left, char *align)
   char *p,*q;
   char *result = malloc(strlen(left)+1);
   char *rp = result;
-  int done,l;
+  int done;
   if (!flawless) {
     if (begins(align,"323")) p = align+1;
     else if (begins(align,"3223")) p = align;
