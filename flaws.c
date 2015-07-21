@@ -40,7 +40,6 @@ int main(int argc, char **argv)
   while (readstr(readline(stdin),&v,&n)) {
     printf("%s\n",v);
     char *p = curls(v);
-    int l = strlen(v);
     int i;
     for (i = 0; i < n; i++) {
       if (p[i] == v[i]) putchar('+');

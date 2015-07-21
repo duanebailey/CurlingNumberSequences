@@ -43,8 +43,6 @@ int main(int argc, char **argv)
 {
   char *v;
   int n;
-  int a = 512;
-  char *work = (char*)malloc(a+1);
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {
     char *ve = ccurlext(v);

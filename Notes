@@ -1,0 +1,49 @@
+Riwaz Poudyal
+
+Possible Conjecture:
+For any sequence S, at least 2S or 3S has a tail length equal to that of S. i.e.
+				t(S) = t(2S) or/and t(3S)
+
+The prefix 2 or 3 may or may not be neutral, but the tails are always the same.
+
+This was exhaustively verified for every sequence up to length 33 and all sequences with length 38
+
+Path towards possible proof:
+
+The conjecture holds by definition for trivial cases in which the added prefix is neutral.
+
+Consider a sequence S such that t(S) = x, and t(2S) =\= x.
+This means that adding a 2 in the front changes the tail of the sequence at some point by
+completing a pattern that starts with a 2, that is, at some point the initial sequence and 
+the tail can be written as
+
+				A(2A)^K, 
+
+where k>=1 and |A|>=0. A 2-prefix changes the sequence to (2A)^(k+1), thus changing 
+the curl and the tail.
+
+To prove the conjecture for these sequences, we need to prove that a 3-Prefix does not change
+the sequences’s tail, that is 
+				t(3A(2A)^k) = t(A(2A)^k)
+
+Similarly, for a sequence Q for which t(S) =\= t(3S)
+
+The pattern must be 
+				A(3A)^K, 
+
+where k>=2 (notice the change in lower bound of K) and 
+
+				t(2A(3A)^k) = t(A(3A)^k)
+The existence of this pattern were verified for each 2 or 3 rotten sequences of length <10
+and some rotten sequences with length>10.
+
+
+Proof: No doubly rotten sequence exist
+
+Assume that the conjecture above is true. From the conjecture, for a X-rotten sequence S, 
+				
+					t(YS) = t(S), 
+where X=2 if Y=3 and X=3 if Y=2
+
+Hence, doubly rotten sequence do not exist. By the same logic, ‘doubly-active’ sequences, the opposite
+of rotten sequences, also do not exist.

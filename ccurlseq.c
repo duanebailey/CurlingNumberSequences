@@ -59,8 +59,8 @@ void parseArgs(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-  int n,a,l,i;
-  char val,c;
+  int n,l,i;
+  char c;
   char *v=0,*s;
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {

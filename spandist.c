@@ -48,7 +48,6 @@ int main(int argc, char **argv)
   char *v;
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {
-    int sn = n;
     if (ext) {
       v = ccurlext(v);
       n = strlen(v);
@@ -58,7 +57,6 @@ int main(int argc, char **argv)
       char c = ccurl(v,i);
       if (c == v[i]) {
 	int l=ccurlen(v,i);
-	int j;
 	int ic = (c-'0')*l+1; // the curl
 	if (l < 0) {
 	  printf("i=%d, c=%c, l=%d, ic=%d\n",i,c,l,ic);
