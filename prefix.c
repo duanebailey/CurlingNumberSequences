@@ -46,7 +46,8 @@ int uniq(char **a, int n)
   char **inp, **outp;
   int i;
   if (n <= 1) return n;
-  inp = outp = a+1;
+  outp = a;
+  inp = a+1;
   while ((inp-a) < n) {
     if (strcmp(*inp,*outp)) {
       *++outp = *inp;
