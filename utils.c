@@ -42,9 +42,34 @@ char ccurl(char *s, int n)
       if (strncmp(p,m,l)) break;
       k++;
     }
-    if (k > maxk) maxk = k;
+      if (k > maxk) maxk = k;
   }
   return maxk+'0';
+}
+ 
+void ccurl2(char *s, int n, char *result, int *startp)
+{
+  int l;
+  int maxk = 1;
+  int k;
+  char *p;
+  char *m;
+  int strt = n, stp = n;
+  for (l = 1; l <= stp; l++) {
+    k = 1;
+    m = s+(n-l);
+    for (p = m-l; p >= s; p-=l) {
+      if (strncmp(p,m,l)) break;
+      k++;
+    }
+    if (k > maxk) {
+      maxk = k;
+      stp = stp/k;
+      strt = n-k*l;
+    }
+  }
+  if (startp) *startp = strt;
+  *result = maxk+'0';
 }
 
 int ccurlen(char *s, int n)
@@ -84,6 +109,28 @@ char *ccurlext(char *s)
     result[n] = '\0';
   } while (v != '1');
   return realloc(result,strlen(result)+1);
+}
+
+extern char *ccurlext3(char *s,int *lp, int *np)
+{
+  int sl = strlen(s);
+  int n = sl;
+  int neutral = sl;
+  int start;
+  int a = 10*n; // upper bound on length?
+  char *result = (char*)malloc(a+1);
+  strcpy(result,s);
+  do {
+    if (n == a) {
+      a *= 2;
+      result = (char*)realloc(result,a+1);
+    }
+    ccurl2(result,n,result+n,&start);
+    if (start < neutral) neutral = start;
+  } while (result[n++] != '1');
+  result[n] = '\0';
+  if (lp) *lp = n-sl;
+  return result;
 }
 
 static char compS(int n, char *S, int *rotp)
