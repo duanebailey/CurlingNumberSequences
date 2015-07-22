@@ -62,16 +62,16 @@ int main(int argc, char **argv)
   int n,l,i;
   char c;
   char *v=0,*s;
+  int nt;
   parseArgs(argc,argv);
   while (readstr(readline(stdin),&v,&n)) {
     l = n; // start length
-    s = ccurlext(v);
+    s = ccurlext3(v,&n,&nt);
     n = strlen(s); // extension length
     if (length) {
       printf("%d:",n-l-1);
     }
     if (neut) {
-      int nt = cneutral(s,l,n);
       printf("%d:",nt);
     }
     if (s[n-1] == '1' && !terminal) {

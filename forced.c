@@ -14,7 +14,7 @@ int main (int argc, char **argv){
 
   if (!(argc > 2))  {
 
-    fputs("Usage: generate [sequence(Pattern)] [start position]", stdout);
+    fputs("Usage: forced [sequence(Pattern)] [start position]", stdout);
 
   } else {
     
