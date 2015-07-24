@@ -14,13 +14,13 @@ int terminal = 1;
 
 void Usage(char *pn)
 {
-  fprintf(stderr,"Usage: %s [-clnst]\n",pn);
-  fprintf(stderr,"\n-s\tprint number of neutral start characters\n");
-  fprintf(stderr,"\n-l\tprint tail length\n");
+  fprintf(stderr,"Usage: %s [-clnst1]\n",pn);
+  fprintf(stderr,"\t-c\tprint values > 4 as 4\n");
+  fprintf(stderr,"\t-l\tprint tail length\n");
   fprintf(stderr,"\t-s\tprint just the seed\n");
+  fprintf(stderr,"\t-n\tprint number of neutral start characters\n");
   fprintf(stderr,"\t-t\tprint just the tail\n");
   fprintf(stderr,"\t-1\tdon't print terminal 1\n");
-  fprintf(stderr,"\t-c\tprint values > 4 as 4\n");
   exit(1);
 }
 

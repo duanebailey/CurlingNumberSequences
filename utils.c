@@ -129,6 +129,7 @@ extern char *ccurlext3(char *s,int *lp, int *np)
     if (start < neutral) neutral = start;
   } while (result[n++] != '1');
   result[n] = '\0';
+  if (np) *np = neutral;
   if (lp) *lp = n-sl;
   return result;
 }
