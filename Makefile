@@ -1,7 +1,10 @@
-TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws diffs deflate prefix hood forced
+TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws diffs deflate prefix hood forced starts
 all:	$(TARGETS)
 
-forced:	forced.c
+starts:	starts.c utils.c
+	gcc -Wall -g -o starts starts.c utils.c
+
+forced:	forced.c utils.c
 	gcc -Wall -g -o forced forced.c utils.c
 
 hood:	hood.c

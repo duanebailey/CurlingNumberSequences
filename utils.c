@@ -133,6 +133,77 @@ extern char *ccurlext3(char *s,int *lp, int *np)
   return result;
 }
 
+int sinq(char **a, int *np, char *s)
+{
+  int n = *np;
+  int ins = n,i; // ideal insertion point
+  while (ins > 0) {
+    int diff = strcmp(s,a[ins-1]);
+    if (diff == 0) { return 0; } // not unique; no new entry
+    if (diff < 0) { // string is less; change insertion
+      ins--;
+    } else { // string is bigger; insert at ins
+      break;
+    }
+  }
+  for (i = n; i > ins; i--) {
+    a[i] = a[i-1];
+  }
+  a[ins] = s;
+  *np = n+1;
+  return 1;
+}
+
+// This version sorts by (1) length then (2) lexographic
+int sinq2(char **a, int *np, char *s)
+{
+  int n = *np;
+  int ins = n,i; // ideal insertion point
+  int sl = strlen(s);
+  while (ins > 0) {
+    int al = strlen(a[ins-1]);
+    int diff = strcmp(s,a[ins-1]);
+    if (diff == 0) { return 0; } // not unique; no new entry
+    if ((sl < al) || ((sl == al) && (diff < 0))) { // string is less; change insertion
+      ins--;
+    } else { // string is bigger; insert at ins
+      break;
+    }
+  }
+  for (i = n; i > ins; i--) {
+    a[i] = a[i-1];
+  }
+  a[ins] = s;
+  *np = n+1;
+  return 1;
+}
+
+// This version sorts by (1) length then (2) lexographic
+int sinq3(char **a, int *ia, int *np, char *s, int ii)
+{
+  int n = *np;
+  int ins = n,i; // ideal insertion point
+  int sl = strlen(s);
+  while (ins > 0) {
+    int al = strlen(a[ins-1]);
+    int diff = strcmp(s,a[ins-1]);
+    if (diff == 0) { return 0; } // not unique; no new entry
+    if ((sl < al) || ((sl == al) && (diff < 0))) { // string is less; change insertion
+      ins--;
+    } else { // string is bigger; insert at ins
+      break;
+    }
+  }
+  for (i = n; i > ins; i--) {
+    a[i] = a[i-1];
+    ia[i] = ia[i-1];
+  }
+  a[ins] = s;
+  ia[ins] = ii;
+  *np = n+1;
+  return 1;
+}
+
 static char compS(int n, char *S, int *rotp)
 {
   // we determine the next digit of S.
