@@ -46,26 +46,6 @@ int scmp(const void *ap, const void *bp)
   return strcmp(as,bs);
 }
 
-int sinq(char **a, int *np, char *s)
-{
-  int n = *np;
-  int ins = n,i; // ideal insertion point
-  while (ins > 0) {
-    int diff = strcmp(s,a[ins-1]);
-    if (diff == 0) { return 0; } // not unique; no new entry
-    if (diff < 0) { // string is less; change insertion
-      ins--;
-    } else { // string is bigger; insert at ins
-      break;
-    }
-  }
-  for (i = n; i > ins; i--) {
-    a[i] = a[i-1];
-  }
-  a[ins] = s;
-  *np = n+1;
-  return 1;
-}
 
 int main(int argc, char **argv)
 {

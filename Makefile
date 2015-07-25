@@ -64,11 +64,11 @@ utils.o:	utils.c utils.h
 props:	props.c utils.o
 	gcc -Wall -o props props.c utils.o
 
-curlseq:	curlseq.c utils.o
-	gcc -Wall -o curlseq curlseq.c utils.o
+curlseq:	curlseq.c utils.c
+	gcc -Wall -o curlseq curlseq.c utils.c
 
-ccurlseq:	ccurlseq.c utils.o
-	gcc -Wall -g -o ccurlseq ccurlseq.c utils.o
+ccurlseq:	ccurlseq.c utils.c
+	gcc -Wall -g -o ccurlseq ccurlseq.c utils.c
 
 choose:	choose.c
 	gcc -Wall -o choose choose.c
