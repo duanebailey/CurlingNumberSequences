@@ -21,14 +21,17 @@ def bruteForceList(l):
         result.append(l2)
         result.append(l3)
     return result
+
 def bruteForcePrint(i):
     for l in bruteForceList(i):
         print(l2s(l))
+
 def bruteForceUpTo(l):
     result = []
     for i in range(1, l):
         result += bruteForceList(i)
     return result
+
 def infGen(i):
     """Generates, proceding backwards, terms from the sequence given by infinitely expanding A and B"""
     depth = i
@@ -43,6 +46,7 @@ def infGen(i):
         for c in reversed(l):
             yield c
         depth+=1
+
 def candidates(i):
     """Searches for candidates for A-like and B-like strings"""
     for s in bruteForceGen(i):
@@ -79,18 +83,14 @@ def backInf(s):
 def inf(i):
     for c in infGen(i):
         print(c)
+
 def listFromInt(l, n):
     """Returns the sequence of length i of 2s and 3s which correspond bitwise to n"""
     result = []
     for i in range(l):
         result.append(3 if n & (1 << i) else 2) 
     return result
-#Each 'node' is a list
-#n[0] contains the data (either 2 or 3)
-#Subsequent values link to the next nodes, if they exist
-def bruteForceTree():
-    """Unused helper function for a possibly more efficient version of back"""
-    return [0, [2],[3]]
+
 def isSelfRep(s):
     """Determines if a sequence is self replicating"""
     t = tail(s)
@@ -103,41 +103,21 @@ def selfrep(i):
         t = tail(s)
         if l2s(t).count(l2s(s)) > 1:
             print(l2s(s) + " l: " + str(len(tail(s))) + " c: " + str(l2s(t).count(l2s(s))))
+
 def selfrepl(i):
     """Version of selfrep that finds all srings with tails > 80"""
     for s in bruteForceGen(i):
         t = tail(s)
         if l2s(t).count(l2s(s)) > 1 and len(tail(s)) > 80:
             print(l2s(s) + " l: " + str(len(tail(s))) + " c: " + str(l2s(t).count(l2s(s))))
-def expandTree(t, oldSize):
-    """Unused helper function for a possibly more efficient version of back"""
-    if oldSize == 1:
-        t.append([2])
-        t.append([3])
-    else:
-        #t[0] is reserved for data
-        size = len(t) - 1
 
-        for i in range(size):
-            expandTree(t[i + 1], oldSize -1)
-def treeToList(t):
-    """Unused helper function for a possibly more efficient version of back"""
-    size = len(t) - 1
-    if size == 0:
-        #Clone it
-        return [list(t)]
-    else:
-        result = []
-        for i in range(size):
-            #Add the data of this branch to the result
-            result += [[t[0]] + x for x in (treeToList(t[i+1]))]
-        return result
 def expand(s):
     while True:
         t = tail(s)
         yield t
         s = s + t[:len(t) - 1] + s
         print(len(s))
+
 def expandFormat(s):
     i = 0
     for t in expand(s):
@@ -145,10 +125,12 @@ def expandFormat(s):
         count2 = len([x for x in t if x == 2])
         count3 = len([x for x in t if x == 3])
         print(str(i) + " | "+ str(len(t)) + " | " + str(count2/count3))
+
 def flawlessGen(i = 1, silent = False):
     for l in bruteForceGen(i, silent):
         s = s2l(recur(l2s(l)))
         yield s
+
 def bruteForceGen(i = 1, silent = False):
     size = i
     while True:
@@ -157,9 +139,11 @@ def bruteForceGen(i = 1, silent = False):
             print(size)
         for result in bruteForceList(size):
             yield result
+
 def sublists(s):
     for i in range(len(s)):
         yield s[i:]
+
 def findWords(s):
     """Find two words, like A and B, with which the entire string can be subdivided. Ignores error in the first 10 or last 10 digits."""
     c = 3
@@ -194,6 +178,7 @@ def findWords(s):
                 if valid and len(a) + len(b) < len(s) and not (a, b) in results:
                     results.append((a,b))
                     print("{} : {}".format(a, b))
+
 def cn(s):
     kMax = 0
     for y in sublists(s):
@@ -205,6 +190,7 @@ def cn(s):
         if k > kMax:
             kMax = k
     return kMax
+
 def cnLength(s):
     """Version of cn(s) that returns a tuple (cn(s), len(Y))"""
     kMax = 0
@@ -219,40 +205,46 @@ def cnLength(s):
             kMax = k
             yLen = len(y)
     return (kMax, yLen)
-def tail(seq):
-    #clone s
-    s = list(seq)
+
+def tail(s):
     initialSize = len(s)
     i = -1
     while i != 1:
         i = cn(s)
         s.append(i)
     return(s[initialSize:])
+
 def tailComplete(s):
     """returns s plus it's tail without line breaks"""
     return s + tail(s)
+
 def doubleRotten(s):
     """Prints 'Double' if a sequence is double-rotten"""
     t = len(tail(s))
     if len(tail([2] + s)) < t and len(tail([3] + s)) < t:
         print("Double")
+
 def rotten(s):
     """Returns 2 if s is 2-rotten, 3 if s is 3-rotten, 0 otherwise"""
     for prefix in [2, 3]:
         if len(tail(s)) > len(tail([prefix] + s)):
             return prefix
     return 0
+
 def rottenDrasticFilter(s):
     """Re-prints all sequences where a prefix decreases the tail by more than sys.argv[2]"""
     offset = int(sys.argv[2])
     if rottenDiff(s) > offset:
         print(l2s(s))
+
 def rottenDiff(s):
     shortened = [rotten(s)] + s
     return len(tail(s)) - len(tail(shortened))
+
 def rottenInc(s):
     """Returns rotten(s) + s"""
     return [rotten(s)] + s
+
 def rottenDiverge(s):
     """Returns the point where s diverges from it's rotten form"""
     t = tail(s)
@@ -262,6 +254,7 @@ def rottenDiverge(s):
             #Note that the output isn't zero-indexed
             return i + len(s) + 1
     return -1
+
 def rottenDivergeRelative(s):
     """Version of rottenDiverge that doens't add on the length of the starting sequence"""
     t = tail(s)
@@ -270,6 +263,7 @@ def rottenDivergeRelative(s):
         if r[i] != t[i]:
             #Note that the output isn't zero-indexed
             return i + 1
+
 def rottenDivFilter(s):
     """Re-prints those sequences where rottenDiverge %2 == 0 and %3 != 0"""
     n = rottenDivergeRelative(s)
@@ -306,6 +300,7 @@ def s2l(s):
 
 def l2s(l):
     return ''.join([str(x) for x in l])
+
 def repeats(s):
     """Return any sequence with length >= 8 characters, which appears in s more than once"""
     for i in range(16, len(s)):
@@ -319,6 +314,7 @@ def isWeak(s):
 def weakFilter(s):
     if not isWeak(s):
         print(l2s(s))
+
 def isWeakFront(s):
     if s[-1] != cn(s[:-1]):
         print(l2s(s))
@@ -328,6 +324,7 @@ def backFlawless(s):
     for test in flawlessGen():
         if validBackward(test, s) and not isWeak(test): 
             print(l2s(test))
+
 def backFlawlessLimit(s):
     """Combination of back and backFlawless - returns all results below length 16"""
     result = []
@@ -336,6 +333,7 @@ def backFlawlessLimit(s):
             result.append(l2s(test))
         if len(abstract(l2s(test))) > 10:
             return result
+
 def backLimit(s):
     result = []
     for test in bruteForceGen(0, True):
@@ -343,16 +341,19 @@ def backLimit(s):
             result.append(l2s(test))
         if len(l2s(test)) > 10:
             return result
+
 def backMax(s):
     """Version of back that will continue, checking isWeak, trying to find the max starting sequence"""
     for test in bruteForceGen():
         if validBackward(test, s) and not isWeak(test): 
             print(l2s(test))
+
 def backTot(s):
     """Version of backMax that will find s anywhere in the tail, not just the beginning"""
     for test in bruteForceGen():
         if l2s(s) in l2s(tail(test)):
             print(l2s(test))
+
 def baselineNatural(n):
     """Returns a baseline number for the percentage given by natural(s)"""
     t = 0
@@ -367,6 +368,7 @@ def baselineNatural(n):
         t += natural(l)
     t /= s
     return t
+
 def natural(s):
     """Returns the number of digits in s that are the natural curling number of the preceding sequence"""
     r = 0
@@ -374,6 +376,7 @@ def natural(s):
         if cn(s[:i]) == s[i]:
             r += 1
     return r
+
 def naturalVisual(s):
     """Returns a visual representation of the distribution of natural
     X represents natural digits, - represents non-natural"""
@@ -383,8 +386,10 @@ def naturalVisual(s):
     for i in range(1, len(s)):
         r += "X" if cn(s[:i]) == s[i] else "-"
     return r
+
 def tailLength(s):
     return(len(tail(s)))
+
 def depend(s, line):
     """Prints a graphical representation of dependencies between the digits sequence
     A digit is considered to depend on a digit directly
@@ -426,10 +431,12 @@ def P234(s):
     if "2222" in l2s(s):
         return False
     return True
+
 def back(s):
     for test in bruteForceGen():
         if validBackward(test, s):
             return test
+
 def abstractAB(s):
     r = ""
     while len(s) > 0:
@@ -443,6 +450,7 @@ def abstractAB(s):
             r += s[0]
             s = s[1:]
     return r
+
 def BABsearch(i):
     """Outputs a list of flawless sequences which contain a complete BAB in their tail"""
     for s in flawlessGen(int(i)):
@@ -462,6 +470,7 @@ def abstract(s):
             r += " <" + s[0] + "> "
             s = s[1:]
     return r
+
 def recur(s):
     """Expands s using 2=2232 and 3 = 322232223"""
     result = ""
@@ -472,6 +481,7 @@ def recur(s):
             result += '322232223'
     return result
 def recurFlexible(s, A, B):
+
     """Version of recur using user supplied values for A and B"""
     result = ""
     for c in s:
@@ -480,6 +490,7 @@ def recurFlexible(s, A, B):
         if c == '3':
             result += B
     return result
+
 def abstractVisual(s):
     a = abstract(s)
     r = ""
@@ -488,6 +499,7 @@ def abstractVisual(s):
         l = len(recur(c)) -1
         r += " " * l
     return r
+
 def infExt(s):
     """Given a starting string s, it will repeatedly 'save' the tail from destruction by replacing the terminal '1' with a '2'"""
     max = 150
@@ -503,6 +515,7 @@ def infExt(s):
         if len(t) > max:
             max = len(t)
             print("Starting Sequence: {} - Tail {}".format(l2s(s), l2s(t)))
+
 def modRecur(s):
     """version of recur that attemps to get rid of single 2s"""
     s = recur(s)
@@ -523,6 +536,31 @@ def contRecur(s):
     for i in range(int(input("Repetitions: "))):
         s = modRecur(s)
         print(s)
+
+def cde(maxLen):
+    """Generates all sequences consisting of C, D, E, and flipped C, D, E, for a given length"""
+
+    #In order: C, D, E, flipped C, flipped D, flipped E
+    #Note that recur is called on these later
+    words = [
+        "222322232232223222323",
+        "2232223222323",
+        "22232232223222323",
+        "222322232232223222323",
+        "2223222322323",
+        "22232223223222323"]
+        
+    lastList = [""]
+    nextList = []
+    for i in range(maxLen):
+        for l in lastList:
+            for w in words:
+                nextList.append(recur(w) + l)
+        lastList = nextList
+        nextList = []
+        for out in lastList:
+            print(out)
+
 def analyze(s):
     """Runs a battery of tests and gives all possible information for s"""
     l = s2l(s)
@@ -593,8 +631,14 @@ if __name__ == "__main__":
             print("weakFilter - will only reprint input if the string is strong")
             print("all - will generate all sequences of a given length")
             print("infExt - will try to expand a starting sequence forever by saving it from destruction")
+            print("recurFlex - recur where the second and third arguments are A and B")
+            print("cde - generates all sequences made of C, D, and E up to a given length")
             exit()
         data = input("")
+        if prgm == "cde":
+            cde(int(data))
+        if prgm == "recurFlex":
+            print(recurFlexible(data, sys.argv[2], sys.argv[3]))
         if prgm == "infExt":
             infExt(s2l(data))
         if prgm == "all":
