@@ -13,15 +13,20 @@ void Usage(char *pn)
 
 void parseArgs(int argc, char **argv)
 {
-  char *pn = *argv;
+  char c,*pn = *argv;
   while (argv++,--argc) {
     char *arg = *argv;
     if (*arg == '-') {
-      switch (*++arg) {
-      default:
-	Usage(pn);
-	break;
+      while ((c = *++arg)) {
+	switch (c) {
+	default:
+	  Usage(pn);
+	  break;
+	}
       }
+    } else {
+      // positional arguments here
+      Usage(pn);
     }
   }
 }
