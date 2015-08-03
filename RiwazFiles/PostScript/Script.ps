@@ -1,0 +1,85 @@
+%!PS-Adobe-3.0
+
+%Constants
+
+/origin {0 0} def 
+/color1 { 89 255 div 17 255 div 142 255 div } def
+/color2 { 1 1 0 } def
+/cols 100 def
+/scval { 72 8 mul cols div dup neg } def
+/transval { 72 .25 mul 10.75 72 mul} def
+/lwidval {.022} def
+
+%Initialize graphics
+
+transval translate
+scval scale
+lwidval setlinewidth
+
+%Draw a box
+
+/bx {
+newpath
+2 copy
+moveto
+1 0 rlineto
+0 1 rlineto
+-1 0 rlineto
+0 -1 rlineto
+closepath
+} def
+
+%Draw and paint A
+
+/A {
+bx
+color1 setrgbcolor
+fill
+bx 1 setgray
+stroke
+spc
+} def
+
+%Draw and paint B
+
+/B {
+bx
+color2 setrgbcolor
+fill
+bx 1 setgray
+stroke
+spc
+} def
+
+%Leave a space
+
+/spc {
+exch 1 add exch
+} def
+
+%Move to new line
+
+/nl {
+1 add
+exch
+pop
+0 exch
+} def
+
+origin
+A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A B A A nl
+A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A nl
+A A B A A A B A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B B A A A B A A A B A A A B B A A A B A A A B A A A B B A A B A A A B A A A B nl
+A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B B A A A B A A A B A A A B B A A A B A A A B A A A B B A A B A A A B A A A B A B A A A B A A A B nl
+A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B B A A A B A A A B A A A B B A A A B A A A B A A A B B A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A nl
+A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A B A A A B A A A B nl
+A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B nl
+A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A nl
+B A B A A A B A A A B B A A A B A A A B A A A B B A A A B A A A B A A A B B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A nl
+B B A A A B A A A B A A A B B A A A B A A A B A A A B B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B A A B A A A B A A A B A B A A A B A A A B B A A A B A A A B nl
+A A A B B A A A B A A A B A A A B B B B 
+
+showpage
+
+
+
