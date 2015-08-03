@@ -1,0 +1,3 @@
+#Check A and B in listed order
+A:2232
+B:322232223
