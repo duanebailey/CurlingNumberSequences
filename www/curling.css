@@ -1,0 +1,112 @@
+body {
+    background: #FFFFFF;
+    font-family: Verdana, Georgia, Arial, Helvetica, sans-serif;
+}
+
+div.left {
+  float: left;
+  text-align: center;
+  max-width: 175;
+  margin: 5px; 
+}
+
+div.right {
+  float: right;
+  text-align: center;
+  max-width: 175;
+  margin: 5px;
+}
+
+div.caption {
+  text-align: center;
+  font-size: 50%;
+  max-width: 150;
+}
+
+div.right div.caption {
+  color: red;
+}
+
+div.left div.caption {
+  color: blue;
+}
+
+table
+{
+    border:0px;
+    text-align: left;
+}
+
+blockquote.box
+{
+ background: #ffffff;
+ border: 1px solid red;
+ padding: 5px;
+}
+
+div.box
+{
+ background: #ffffff;
+ border: 1px solid red;
+ padding: 5px;
+}
+
+p.thesis
+{
+   font-style: bold;
+   font-size: 150%;
+   text-align: center;
+   color: black;
+}
+
+p.author
+{
+   font-style: italic;
+   font-size: 120%;
+   text-align: center;
+   color: blue;
+}
+
+div.abstract
+{
+   margin-left: 0.25in;
+   margin-right: 0.25in;
+   padding: 0.25in;
+   border: 1px solid red;
+   align: left;
+   color: black;
+}
+
+div.header
+{
+    border-top: 2px solid purple;
+    border-bottom: 2px solid yellow;
+    background-image: url(bs/WCLogo-small.gif);
+    background-position: center;
+    background-repeat: repeat-x;
+    padding: 20px;
+}
+
+div.footer
+{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+hr { color: purple; }
+h4 { color:#000088;}
+h3 { color:#000088;}
+div.leftbar {
+  font-size: 75%;
+  padding-left: 10px;
+  margin-left: 10px;
+  border-left: 2px solid purple;
+  text-align: left;
+  max-width: 300px;
+}
+
+h4.left { clear: left;}
+h4.right { clear: right; }
+a:link, a:visited { color: black;  }
+a:hover { color: blue;  }
+
