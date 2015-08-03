@@ -1,10 +1,78 @@
-<html>
+<html lang=en>
+<meta name=description content="Curling number sequences (Williams College)">
+<meta name=keywords content="curling numbers, curling number sequence, aperidioc sequences, rotten sequences, iterated morphisms, Duane Bailey, Derrick Bonafilia, Tong Liu, Riwaz Poudyal, Adly Templeton, Diwas Timilsina">
   <head>
-    <title>New Results on the Curling Number Sequences</title>
+    <title>Curling Number Sequences</title>
+    <link rel="stylesheet" href="curling.css" type="text/css">
   </head>
-  
 <body>
-  Coming soon!
+<h3>New Results Concerning Curling Number Sequences</h3>
+<i> Duane A. Bailey, Derrick Bonafilia '17, Tong Liu '16, Riwaz Poudyal '18, Adly Templeton, Diwas Timilsina '16</i>
+<p>
+The curling number of an finite sequence of integers indicates, essentially,
+the maximum number of times a repeated suffix repeats. For example, the curl
+of 
+<br>
+<center>S=[2,3,2,2,2,3,2,3]</center>
+<br> is 2 since the suffix [2,3] is repeated twice
+as a suffix. By iteratively expanding the sequence by appending 
+its curling number we generate a (possibly infinite) sequence that at 
+some point mentions 1.  The <i>tail</i> of the above sequence is the 58-digit
+<br>
+<center>S<sup>e</sup>=[2,2,2,3,2,2,2,3,2,2,3,2,2,2,3,2,2,2,3,2,3,2,2,2,3,2,2,2,3,2,2,3,2,2,2,3,2,2,2,3,2,3,2,2,2,3,2,2,2,3,2,2,3,2,2,3,3,2,1].</center>
+<br>  Indeed, S is the unique 8-digit string that yields a tail this long.
+<p>
+The <i>Curling Number Conjecture</i> suggests this process always eventually
+mentions 1 or that the tails are always finite length.
+<p>
+This page organizes the public results (papers, programs, data) on our study of the conjecture as
+it relates to the sequences composed primarily of 2's and 3's (we refer to these
+as (2,3)-sequences).
+
+<h4>A Quasi-crystalline Model for Curling (Bailey, Poudyal, Templeton, Liu and Timilsina)</h4>
+We have developed a model for the growth of tails that makes builds a careful
+analogy between (2,3)-sequences and the words of a parallel rewriting grammar (an D0L L-system or iterated morphism).  Approaching the Curling Number Conjecture
+using a grammatical approach brings to bear important tools (viz. pumping-style
+lemmas, population models, and others) that have yielded surprising and important results. 
+<br> More of those results will appear here soon.
+
+<h4>Enumeration of Rotten Sequences (Bailey, Bonafilia, Liu, Poudyal, Templeton)</h4>
+In a computation that has taken about 196 CPU years, we have explored the
+space of starting sequences to length 48.  Our enumeration of the <i>rotten</i>
+sequences (sequences are rotten if, by prefixing the sequence with a digit
+we <i>shorten</i> its tail), has more fine-grained understanding of the
+structure of these rare sequences.  
+<br>Information on that to be posted soon.
+
+<h4>Enumeration of Active Sequences (Bailey and Poudyal)</h4>
+We are beginning a similar enumeration of sequences that are <i>active</i>.
+These are sequences who, when prefixed, have extended tails.  The importance
+of these sequences has only recently been understood as important. 
+<br> Information to be posted soon.
+
+<h4>The Harmony Computation System (Bailey and Bonafilia)</h4>
+Many of our calculations are based on python-orchestrated highly-tuned C code.
+The coordination language, <i>harmony</i>, is a variant of Linda (by Gelernter et al.) that supports a distributed, checkpointed database that manages the
+resources of volunteer workers.  Careful checkpointing was important to 
+successfully weathering power and network outages, machine upgrades, and
+hardware and human failures. 
+<br> Notes with our experience using harmony to coordinate
+machine labs, clusters, and hand-me-down hardware will be posted soon.
+
+<h4>Acknowledgments</h4>
+We thank Williams College for contributing research funds in support of this
+project, Mary Bailey for her technical support, and the Department of Computer
+Science for season-long dedication of computing resources.
+
+<h4>Contact Information</h4>
+<div class=leftbar>
+Duane A. Bailey<br>
+47 Lab Campus Drive<br>
+Williams College<br>
+Williamstown, Massachusetts 01267<br>
+Telephone: (413) 597-2417<br>
+Facsimile: (413) 597-4250<br>
+</div>
 </body>
 </html>
   
