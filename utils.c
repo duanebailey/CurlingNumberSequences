@@ -42,9 +42,34 @@ char ccurl(char *s, int n)
       if (strncmp(p,m,l)) break;
       k++;
     }
-    if (k > maxk) maxk = k;
+      if (k > maxk) maxk = k;
   }
   return maxk+'0';
+}
+ 
+void ccurl2(char *s, int n, char *result, int *startp)
+{
+  int l;
+  int maxk = 1;
+  int k;
+  char *p;
+  char *m;
+  int strt = n, stp = n;
+  for (l = 1; l <= stp; l++) {
+    k = 1;
+    m = s+(n-l);
+    for (p = m-l; p >= s; p-=l) {
+      if (strncmp(p,m,l)) break;
+      k++;
+    }
+    if (k > maxk) {
+      maxk = k;
+      stp = stp/k;
+      strt = n-k*l;
+    }
+  }
+  if (startp) *startp = strt;
+  *result = maxk+'0';
 }
 
 int ccurlen(char *s, int n)
@@ -84,6 +109,100 @@ char *ccurlext(char *s)
     result[n] = '\0';
   } while (v != '1');
   return realloc(result,strlen(result)+1);
+}
+
+extern char *ccurlext3(char *s,int *lp, int *np)
+{
+  int sl = strlen(s);
+  int n = sl;
+  int neutral = sl;
+  int start;
+  int a = 10*n; // upper bound on length?
+  char *result = (char*)malloc(a+1);
+  strcpy(result,s);
+  do {
+    if (n == a) {
+      a *= 2;
+      result = (char*)realloc(result,a+1);
+    }
+    ccurl2(result,n,result+n,&start);
+    if (start < neutral) neutral = start;
+  } while (result[n++] != '1');
+  result[n] = '\0';
+  if (np) *np = neutral;
+  if (lp) *lp = n-sl;
+  return result;
+}
+
+int sinq(char **a, int *np, char *s)
+{
+  int n = *np;
+  int ins = n,i; // ideal insertion point
+  while (ins > 0) {
+    int diff = strcmp(s,a[ins-1]);
+    if (diff == 0) { return 0; } // not unique; no new entry
+    if (diff < 0) { // string is less; change insertion
+      ins--;
+    } else { // string is bigger; insert at ins
+      break;
+    }
+  }
+  for (i = n; i > ins; i--) {
+    a[i] = a[i-1];
+  }
+  a[ins] = s;
+  *np = n+1;
+  return 1;
+}
+
+// This version sorts by (1) length then (2) lexographic
+int sinq2(char **a, int *np, char *s)
+{
+  int n = *np;
+  int ins = n,i; // ideal insertion point
+  int sl = strlen(s);
+  while (ins > 0) {
+    int al = strlen(a[ins-1]);
+    int diff = strcmp(s,a[ins-1]);
+    if (diff == 0) { return 0; } // not unique; no new entry
+    if ((sl < al) || ((sl == al) && (diff < 0))) { // string is less; change insertion
+      ins--;
+    } else { // string is bigger; insert at ins
+      break;
+    }
+  }
+  for (i = n; i > ins; i--) {
+    a[i] = a[i-1];
+  }
+  a[ins] = s;
+  *np = n+1;
+  return 1;
+}
+
+// This version sorts by (1) length then (2) lexographic
+int sinq3(char **a, int *ia, int *np, char *s, int ii)
+{
+  int n = *np;
+  int ins = n,i; // ideal insertion point
+  int sl = strlen(s);
+  while (ins > 0) {
+    int al = strlen(a[ins-1]);
+    int diff = strcmp(s,a[ins-1]);
+    if (diff == 0) { return 0; } // not unique; no new entry
+    if ((sl < al) || ((sl == al) && (diff < 0))) { // string is less; change insertion
+      ins--;
+    } else { // string is bigger; insert at ins
+      break;
+    }
+  }
+  for (i = n; i > ins; i--) {
+    a[i] = a[i-1];
+    ia[i] = ia[i-1];
+  }
+  a[ins] = s;
+  ia[ins] = ii;
+  *np = n+1;
+  return 1;
 }
 
 static char compS(int n, char *S, int *rotp)

@@ -1,7 +1,13 @@
-TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws diffs deflate prefix hood forced
+TARGETS=project quick rotworker props curlseq ccurlseq choose gen span spandist cgen drop rotten rotworker2 rotworker3 rotworker4 tailer pop start tile inflate flaws diffs deflate prefix hood forced starts dist
 all:	$(TARGETS)
 
-forced:	forced.c
+dist:	dist.c utils.c
+	gcc -Wall -g -o dist dist.c utils.c
+
+starts:	starts.c utils.c
+	gcc -Wall -g -o starts starts.c utils.c
+
+forced:	forced.c utils.c
 	gcc -Wall -g -o forced forced.c utils.c
 
 hood:	hood.c
@@ -61,11 +67,11 @@ utils.o:	utils.c utils.h
 props:	props.c utils.o
 	gcc -Wall -o props props.c utils.o
 
-curlseq:	curlseq.c utils.o
-	gcc -Wall -o curlseq curlseq.c utils.o
+curlseq:	curlseq.c utils.c
+	gcc -Wall -o curlseq curlseq.c utils.c
 
-ccurlseq:	ccurlseq.c utils.o
-	gcc -Wall -g -o ccurlseq ccurlseq.c utils.o
+ccurlseq:	ccurlseq.c utils.c
+	gcc -Wall -g -o ccurlseq ccurlseq.c utils.c
 
 choose:	choose.c
 	gcc -Wall -o choose choose.c

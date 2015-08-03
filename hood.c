@@ -4,15 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utils.h"
-int prefixlen = 10;
 int allstrings = 0;
-char *patch = "hello world";
+int hoodwidth = 3;
 void Usage(char *pn)
 {
-  fprintf(stderr,"Usage: %s [-a] [-n count] patch\n",pn);
-  fprintf(stderr,"\tpatch\ta word [currently %s].\n",patch);
-  fprintf(stderr,"\t-a\tcompute over all strings on input.\n");
-  fprintf(stderr,"\t-n\tspecify the prefix length expected [currently %d].\n",prefixlen);
+  fprintf(stderr,"Usage: %s [-a] [-h hoodsize]\n",pn);
+  fprintf(stderr,"\t-a\tcompute neighborhoods over all collected inputs.\n");
+  fprintf(stderr,"\t-h\tspecify the diameter of neighborhoods reported [currently %d].\n",hoodwidth);
   exit(1);
 }
 
@@ -26,57 +24,44 @@ void parseArgs(int argc, char **argv)
       case 'a':
 	allstrings = 1;
 	break;
-      case 'n':
-	prefixlen = atoi(*++argv); argc--;
+      case 'h':
+	hoodwidth = atoi(*++argv); argc--;
 	break;
       default:
 	Usage(pn);
 	break;
       }
     } else {
-      patch = arg;
+      Usage(pn);
     }	
   }
-}
-
-int scmp(const void *ap, const void *bp)
-{
-  char *as = *(char**)ap;
-  char *bs = *(char**)bp;
-  return strcmp(as,bs);
 }
 
 
 int main(int argc, char **argv)
 {
   int n,done,salloc,i,ns;
-  char *v,*next,*prefix,*vp,**strings;
+  char *v,*hood,*vp,**strings;
   parseArgs(argc,argv);
   salloc = 10;
   strings = (char**)malloc(salloc*sizeof(char*));
   ns = 0;
   while (readstr(readline(stdin),&v,&n)) {
-    vp = v+prefixlen;
+    vp = v;
     done = 0;
-    while (!done) {
-      next = strstr(vp,patch);
-      if (next == 0) {
-	done = 1;
-	break;
-      }
-      prefix = strndup(next-prefixlen,prefixlen);
+    for (i = 0; i+hoodwidth <= n; i++) {
+      hood = strndup(v+i,hoodwidth);
       if (ns == salloc) {
 	salloc *= 2;
 	strings = (char**)realloc(strings,salloc*sizeof(char*));
       }
-      if (!sinq(strings,&ns,prefix)) {
-	free(prefix);
+      if (!sinq(strings,&ns,hood)) {
+	free(hood);
       }
-      vp = next + 1;
     }
     if (!allstrings) {
       for (i = 0; i < ns; i++) {
-	printf("%s %s\n",strings[i],patch);
+	printf("%s\n",strings[i]);
 	free(strings[i]);
       }
       ns = 0;
@@ -84,7 +69,7 @@ int main(int argc, char **argv)
   }
   if (allstrings) {
     for (i = 0; i < ns; i++) {
-      printf("%s %s\n",strings[i],patch);
+      printf("%s\n",strings[i]);
       free(strings[i]);
     }
   }
