@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+/home/cs program name < file >output 2>errorfile
+/
+

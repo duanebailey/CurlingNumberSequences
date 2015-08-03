@@ -1,0 +1,62 @@
+%!PS-Adobe-3.0
+
+/blue {0 0 1} def
+/red {1 0 0} def
+/cols 70 def
+/scval { 72 8 mul cols div dup neg } def
+/transval { 72 .25 mul 10.75 72 mul} def
+/lwidval {.022} def
+
+
+transval translate
+scval scale
+lwidval setlinewidth
+
+/bx
+{
+	newpath
+	2 copy
+	moveto
+	1 0 rlineto
+	0 1 rlineto
+	-1 0 rlineto
+	0 -1 rlineto
+	closepath
+} def
+
+/A
+{
+
+	bx
+	blue setrgbcolor	
+	fill
+	bx 1 setgray
+	stroke
+	spc
+} def
+
+/B
+{
+	bx
+	red setrgbcolor
+	fill	
+	bx 1 setgray
+	stroke
+	spc
+} def
+
+/spc
+{
+	exch 1 add exch
+} def
+
+/nl
+{
+	1 add
+	exch
+	pop
+	0 exch
+} def
+
+
+0 0 A A B A B A A A B A A A spc spc A A A nl A A A
