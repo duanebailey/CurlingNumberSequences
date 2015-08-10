@@ -25,7 +25,27 @@ def bruteForceList(l):
 def bruteForcePrint(i):
     for l in bruteForceList(i):
         print(l2s(l))
+def bruteForceN(l):
+    #Get the highest number
+    f = int(sys.argv[2]) - 1
+    #This uses a similar method to bitwise operations
+    #Except that we have 3 digits instead of 2
+    for i in range(f ** l):
+        print(seqFromNumN(i, f))
+def seqFromNumN(i, f):
+    r = []
+    for j in range(l):
+        m = i // f3 ** j)
+        m %= f
+        i -= m
+        r.append(m + 2)
+    return(l2s(r))
 
+def bruteForceSampleN(l):
+    """Version of bruteForce4 that samples only 50,000 sequences"""
+    f = int(sys.argv[2]) - 1
+    for i in [random.randint(0, (f ** l) - 1) for x in range(500000)]:
+        print(seqFromNumN(i, f)
 def bruteForceUpTo(l):
     result = []
     for i in range(1, l):
@@ -380,7 +400,6 @@ def natural(s):
 def naturalVisual(s):
     """Returns a visual representation of the distribution of natural
     X represents natural digits, - represents non-natural"""
-    print(l2s(s))
     #print(abstractVisual(l2s(s)))
     r = "-"
     for i in range(1, len(s)):
@@ -540,15 +559,15 @@ def contRecur(s):
 def cde(maxLen):
     """Generates all sequences consisting of C, D, E, and flipped C, D, E, for a given length"""
 
-    #In order: C, D, E, flipped C, flipped D, flipped E
+    #In order: C, D, E, flipped D, flipped E
     #Note that recur is called on these later
     words = [
         "222322232232223222323",
         "2232223222323",
         "22232232223222323",
-        "222322232232223222323",
         "2223222322323",
-        "22232223223222323"]
+        "22232223223222323",
+        "23"]
         
     lastList = [""]
     nextList = []
@@ -560,7 +579,24 @@ def cde(maxLen):
         nextList = []
         for out in lastList:
             print(out)
-
+def BABValidate(s):
+    """Determines which instances of BAB in a string are validated or unvalidated"""
+    
+    indicies = [x for x in range(len(s)) if s[x:x+3] == "323"]
+    r = ""
+    for i in range(len(indicies)):
+        index = indicies[i]
+        valid = False
+        for j in reversed(indicies[:i]):
+            #Find string between two instances of BAB
+            interval = "3" + s[j+3:index]
+            if s[j-len(interval):j] == interval:
+                valid = True
+                break
+        r += " " * (i - len(r))
+        r += "Y" if valid else "X"
+    return r
+        
 def analyze(s):
     """Runs a battery of tests and gives all possible information for s"""
     l = s2l(s)
@@ -594,6 +630,8 @@ if __name__ == "__main__":
     prgm = sys.argv[1]
     while True:
         if prgm == "help":
+            print("bruteN - generates all starting sequences of a given length. CLI determines the digits that can make up the sequence")
+            print("bruteNs - version of bruteN that returns 500,000 random values")
             print("expand - infintely expands input (ie. 48e48)")
             print("selfrep - finds all self-replicating sequences above a length")
             print("selfreplong - selfrep but only gives sequences with tail above 80")
@@ -633,8 +671,19 @@ if __name__ == "__main__":
             print("infExt - will try to expand a starting sequence forever by saving it from destruction")
             print("recurFlex - recur where the second and third arguments are A and B")
             print("cde - generates all sequences made of C, D, and E up to a given length")
+            print("abstract-v - Formatted version of abstract")
+            print("babValid - determines if each instance of BAB is validated or unvalidated in a string. Note that this considers BAB=\"323\
+ - ie, the input should be parsed once")
             exit()
         data = input("")
+        if prgm == "bruteNs":
+           bruteForceSampleN(int(data))
+        if prgm == "bruteN":
+            bruteForceN(int(data))
+        if prgm == "babValid":
+            print(BABValidate(data))
+        if prgm == "abstract-v":
+            print(abstractVisual(data))
         if prgm == "cde":
             cde(int(data))
         if prgm == "recurFlex":
@@ -716,6 +765,15 @@ if __name__ == "__main__":
         if prgm == "baseline":
             print(baselineNatural(int(data)))
         if prgm == "natural-v":
+            r = naturalVisual(s2l(data))
+            while len(data) > 0:
+                lineLen = min(200, len(data))
+                
+                print(data[:lineLen])
+                print(r[:lineLen])
+
+                data = data[lineLen:]
+                r = r[lineLen:]
             print(naturalVisual(s2l(data)))
         if prgm == "taillen":
             print(tailLength(s2l(data)))
