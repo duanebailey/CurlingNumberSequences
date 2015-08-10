@@ -526,10 +526,8 @@ def infExt(s):
         t = tail(s)
         s = s + t
         if s[-2] == 4:
-            s[-2] = 3
             s.pop(-1)
-        else:
-            s[-1] = 2
+        s[-1] = 2
         print(str(len(t)) + " : " + str(len(s)))
         if len(t) > max:
             max = len(t)
@@ -596,7 +594,13 @@ def BABValidate(s):
         r += " " * (i - len(r))
         r += "Y" if valid else "X"
     return r
-        
+def ext(l, rep):
+    r = l
+    for i in range(rep):
+        t = tail(list(r))
+        r = r + t[:-1] + r
+        print(l2s(r))
+    
 def analyze(s):
     """Runs a battery of tests and gives all possible information for s"""
     l = s2l(s)
@@ -674,8 +678,14 @@ if __name__ == "__main__":
             print("abstract-v - Formatted version of abstract")
             print("babValid - determines if each instance of BAB is validated or unvalidated in a string. Note that this considers BAB=\"323\
  - ie, the input should be parsed once")
+            print("ext - Will extend a sequence (ie. 48e48). A second argument will extend the sequence multiple times")
             exit()
         data = input("")
+        if prgm == "ext":
+            r = 1
+            if len(sys.argv) > 2:
+                r = int(sys.argv[2])
+            ext(s2l(data), r)
         if prgm == "bruteNs":
            bruteForceSampleN(int(data))
         if prgm == "bruteN":
