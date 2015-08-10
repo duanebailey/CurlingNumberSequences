@@ -31,11 +31,11 @@ def bruteForceN(l):
     #This uses a similar method to bitwise operations
     #Except that we have 3 digits instead of 2
     for i in range(f ** l):
-        print(seqFromNumN(i, f))
-def seqFromNumN(i, f):
+        print(seqFromNumN(i, f, l))
+def seqFromNumN(i, f, l):
     r = []
     for j in range(l):
-        m = i // f3 ** j)
+        m = i // (f ** j)
         m %= f
         i -= m
         r.append(m + 2)
@@ -45,7 +45,7 @@ def bruteForceSampleN(l):
     """Version of bruteForce4 that samples only 50,000 sequences"""
     f = int(sys.argv[2]) - 1
     for i in [random.randint(0, (f ** l) - 1) for x in range(500000)]:
-        print(seqFromNumN(i, f)
+        print(seqFromNumN(i, f, l))
 def bruteForceUpTo(l):
     result = []
     for i in range(1, l):
