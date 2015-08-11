@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[pdftex]{graphicx}
 \usepackage{amsfonts}
+\usepackage{amsmath}
 \oddsidemargin-.25in
 \def\emph#1{{\em #1\/}}
 \def\term#1{\emph{#1}}
@@ -13,9 +14,22 @@
 \def\QED{$\checkmark$}
 \def\ni{\noindent}
 \def\tail#1{{\tau(#1)}}
+\def\s#1{\frac{#1}{}}
 \def\om#1{{\Omega(#1)}}
+\def\ab{$(a,b)$}
+\def\twth{$(2,3)$}
+\def\abg{\ab-grammar}
+\def\abs{\ab-structured}
+\def\rmu{\tilde{\mu}}
+\def\ra{\tilde{a}}
+\def\rabg{$(\tilde{a},b)$-grammar}
+\def\rabs{$(\tilde{a},b)$-structured}
+\def\q#1{`$#1$'}
+\def\addr#1{$[#1]$}
 \newtheorem{obs}{Observation}
 \def\Proof{\ni{\bf Proof:} }
+
+
 \begin{document}
 \title{Aperiodicity and the Curling Number Conjecture}
 \author{D. A. Bailey\thanks{Contact.}\and D. Bonafilia\and T. Liu\and R. Poudyal\and A. Templeton\and D. Timilsina}
@@ -28,10 +42,10 @@ is possibly empty and $Y$ is not.  The curling sequence is the iterative
 expansion of $S_0=S$ by appending the curling number: $S_{i+1}=S_ic(S_i)$.  
 The \term{curling number conjecture} suggests that this process ultimately
 produces a string whose curling number is $1$.  We present new results on
-\term{2,3-curling sequences}.  We demonstrate an interesting relationship
+\term{\twth-curling sequences}.  We demonstrate an interesting relationship
 between the tails of curling sequences and words in an aperiodic grammar we
-call the \term{A,B-grammar}.  We construct an \term{infinite curling sequence}
-that appears consistent with \term{2,3-curling sequences} and prove a number
+call the \term{\abg}.  We construct an \term{infinite curling sequence}
+that appears consistent with \term{\twth-curling sequences} and prove a number
 of interesting results.  We also report new data on the numbers of
 \term{rotten sequences} up to length $48$.
 \end{abstract}
@@ -90,7 +104,8 @@ maximum tail lengths, $\tail{n}$.  At their respective $n$, these long tail-prod
 \label{tab:egs}
 \end{table}
 
-Each of these sequences meets the following properties:
+It is hypothesized that all especially good starting sequences exhibit
+the following properties:
 \begin{quote}
 \begin{description}
 \item[P2] Each sequence starts with a $2$.
@@ -104,19 +119,19 @@ of aperiodic sequences, and in particular, Gr\"unbaum's discussion of Conway's
 grammatical approach to thinking about the curling number conjecture?
 
 In the next few sections, we describe an aperiodic system, what we call the
-\term{curling grammar}, that describes the structure of (2,3)-curling sequences very
+\term{curling grammar}, that describes the structure of \twth-curling sequences very
 accurately, especially when the boundary conditions demanded by the problem's
 finiteness are removed.  In Section~\ref{sect:ABg} we describe the grammar
 and infinite curling sequences, which have surprising properties.  In
 Section~\ref{sect:reflections} we consider the implications the curling
-grammar has on our understanding of (2,3)-curling sequences.
+grammar has on our understanding of \twth-curling sequences.
 In Section~\ref{sect:rotten} we update the search for doubly-rotten sequences.
 We discuss progress we have made on understanding the open questions proposed
 in \cite{Ch13} in Section~\ref{sect:results}.  Finally, we present our
 conclusions in Section~\ref{sect:conclusions}.
 
-\section{The AB-grammar}\label{sect:ABg}
-We now present a new parallel string re-writing system (an \term{L-system}), the \term{AB-grammar}, that has many structural properties
+\section{The Curling Grammar}\label{sect:ABg}
+We now present a new parallel string re-writing system (an \term{L-system}), the \term{curling grammar}, that has many structural properties
 that are similar to those found in the tails of starting curling sequences
 composed of just 2's and 3's. Restricting the initial curling sequence to 
 2's and 3's is, in a sense, the simplest problem since the tails of these
@@ -130,47 +145,49 @@ $$S=2 3 2 2 2 3 2 3$$
 \ni is extended to
 $$S^{(e)}=2 3 2 \cdot 2 2 3 2 \cdot 3 2 2 2 3 2 2 2 3\cdot2 2 3 2\cdot2 2 3 2\cdot2 2 3 2\cdot3 2 2 2 3 2 2 2 3\cdot 2 2 3 2 \cdot 2 2 3 2\cdot 2 2 3 2\cdot 3 2 2 2 3 2 2 2 3\cdot 2 2 3 2\cdot 2 3 3 2$$
 \ni We have inserted punctuation to delineate motifs that are interesting in this pattern.  Aside from the beginning and end ``boundary'' words, the entire sequence is constructed from two sequences:
-$$A=2 2 3 2$$
-$$B=3 2 2 2 3 2 2 2 3$$
+\begin{align*}
+a&=2 2 3 2\\
+b&=3 2 2 2 3 2 2 2 3
+\end{align*}
 \ni We can then think of $S^{(e)}$ in terms of these sequences:
-$$S^{(e)}=232\cdot A \cdot B A A A B A A A B \cdot A \cdot 2332$$
-With punctation added for emphasis.  We trust the reader will understand interest in the structural parallels between A-B-patterns and 2-3-patterns.
+$$S^{(e)}=232\cdot a\cdot b a a a b a a a b\cdot a \cdot 2332$$
+With punctation added for emphasis.  We trust the reader will understand interest in the structural parallels between \ab-patterns and \twth-patterns.
 These parallels will be formalized in the next section.
 
-\subsection{The AB-Grammar}
+\subsection{The \ab-Grammar}
 
-We now construct an L-system---a parallel string-rewriting system---based on
-an alphabet of two symbols, $A$ and $B$, that contains two productions:
-$$A\rightarrow A A B A$$
-$$B\rightarrow B A A A B A A A B$$
-\ni We call this system, the \term{curling grammar} or the \term{AB-grammar}.  The grammar starts with a string, $S$, and each symbol in the string
+We now construct an L-system---a parallel string-rewriting system---inventively based on
+an alphabet of two symbols, $a$ and $b$, that contains two productions:
+$$a\rightarrow a a b a$$
+$$b\rightarrow b a a a b a a a b$$
+\ni We call this system, the \term{curling grammar} or the \term{\abg}.  The grammar starts with a string, $S$, and each symbol in the string
 is rewritten, in parallel, to produce a new string.  Table~\ref{tab:deriv}
-demonstrates the action of the AB-grammar on symbols $A$ and $B$.
+demonstrates the action of the \abg\ on symbols \q{a} and \q{b}.
 
 \begin{table}
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
-Step & $A_i$ \\\hline
-0 & $A$\\
-1 & $AABA$\\
-2 & $AABA\;AABA\;BAAABAAAB\;AABA$\\
+Step & $A_i=\mu^i(a)$ \\\hline
+0 & $a$\\
+1 & $aaba$\\
+2 & $aaba\;aaba\;baaabaaab\;aaba$\\
  &\\
-i+1 &  $AABA\;AABA\;B...B\;AABA$ \\
+i+1 &  $aaba\;aaba\;b...b\;aaba$ \\
 \hline
 \end{tabular}\\[0.1in]
 \begin{tabular}{|c|c|}
 \hline
-Step &$B$-derivation\\\hline
-0 & $B$\\
-1 & $BAAABAAAB$\\
-2& $BAAABAAA\;AABA\;AABA\;AABA\;BAAABAAAB\;AABA\;AABA\;AABA\;BAAABAAAB$\\
+step &$B_i=\mu^i(b)$\\\hline
+0 & $b$\\
+1 & $baaabaaab$\\
+2& $baaabaaa\;aaba\;aaba\;aaba\;baaabaaab\;aaba\;aaba\;aaba\;baaabaaab$\\
 &\\
-i+1 & $BAAABAAAB\;A...A\;BAAABAAAB$\\
+i+1 & $baaabaaab\;a...a\;baaabaaab$\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Action of the curling grammar on symbols $A$ (above) and $B$ (below).}
+\caption{Action of the curling grammar on symbols \q{a} (above) and \q{b} (below).}
 
 \label{tab:deriv}
 \end{table}
@@ -184,29 +201,29 @@ rewriting or \term{decomposing} of non-terminals into others) and its inverse,
 \term{composition} (the consistent parsing or \term{composing} of letters to
 form their anticedents).  The consistent composition of infinite strings is driven by the following observation.
 \begin{observation}
-The pattern $BAB$ uniquely corresponds to rewriting an $AB$ pattern,
-while the pattern $BAAB$ uniquely corresponds to rewriting $BA$ patterns.
+The pattern $bab$ uniquely corresponds to rewriting an $ab$ pattern,
+while the pattern $baab$ uniquely corresponds to rewriting $ba$ patterns.
 \end{observation}
 \ni This knowledge allows us reverse the rewriting process:
-replace the bracketed part of any instances of $BA\cdot BAAABAAAB\cdot AAB$
-by a $B$ and then replace all instances of $AABA$ by $A$.
+replace the bracketed part of any instances of $ba\cdot baaabaaab\cdot aab$
+by a $b$ and then replace all instances of $aaba$ by $a$.
 
 We can evaluate the growth characteristics of the rewriting rules with a
 substitution matrix and characteristic equation:
 $$Q=\left( \begin{array}{cc} 3 & 6 \\ 1 & 3 \end{array} \right),
 \lambda^2-6\lambda +3=0$$ \ni (The left column of $Q$ describes the expansion
-of $A$, the right column, $B$.) The eigenvalues of $Q$ are
+of \q{a}, the right column, \q{b}.) The eigenvalues of $Q$ are
 $\lambda_1=3+\sqrt{6}\approx 5.45$ and $\lambda_2=3-\sqrt{6}\approx 0.55$.
 The eigenvalue $\lambda_1$ corresponds to the steady-state growth rate
 associated with this rewriting system.  Thus, we expect that words generated
 by this grammar will generally expand by a bit more than $g=5.45$ on each
 rewrite.  The corresponding eigenvector, $v_1=(\sqrt{6},1)$ describes relative
-populations of $A$ and $B$ symbols (respectively), and we expect rewriting to
+populations of \q{a} and \q{b} symbols (respectively), and we expect rewriting to
 cause nontrivial strings to converge to having about $\rho=71\%$ $A$ symbols.
 Again, these relative populations parallel what is seen in practice in curling
 sequences: in our example above, 47 of 67 digits are $2$'s, about $70.15\%$.
 
-What are the properties of infinite strings generated by this substitution?  Our first theorem describes many of the characteristics of infinite strings that are derived through AB-rewriting:
+What are the properties of infinite strings generated by this substitution?  Our first theorem describes many of the characteristics of infinite strings that are derived through \ab-rewriting:
 \def\scS{\mathcal{S}}
 \def\scT{\mathcal{T}}
 \begin{theorem}\label{thm:aperiodic}
@@ -222,14 +239,14 @@ infinitely often with adjacent occurances appearing within a distance proportion
 \ni The proof of these properties are omitted here (see the Appendix), but they
 follow the standard approaches of, say, Gr\"unbaum and Shephard\cite{Gr87}.
 Thinking of $\scT$ as a tiling, then the parallel rewriting system is,
-effectively, an inflation mechanism, that always results in non-periodic $t$.  We say the AB-tiling system is \term{aperiodic}.
+effectively, an inflation mechanism, that always results in non-periodic $t$.  We say the \ab-tiling system is \term{aperiodic}.
 
-To demonstrate the utility of the AB-grammar, we formally develop an analogy
-between AB-tilings and infinite curling sequences.
+To demonstrate the utility of the \abg, we formally develop an analogy
+between \ab-tilings and infinite curling sequences.
 
 \begin{theorem}
-Suppose $\scT$ is an infinite AB-tiling.  If we replace all $A$ symbols with
-2's and all $B$ symbols with 3's, then the resulting string $\scS$ can be
+Suppose $\scT$ is an infinite \ab-tiling.  If we replace all \q{a} symbols with
+2's and all \q{B} symbols with 3's, then the resulting string $\scS$ can be
 interpreted as a curling sequence.  That is, if $s$ is a digit
 in $\scS$ then the sequence to the left of $s$ in $\scS$ can be written as
 $XY^k$ (where $Y$ is finite, and $X$ is infinite) with $k$ attaining maximum
@@ -239,47 +256,399 @@ value $s$.
 enumerate the different ways that $s$ was the result of rewriting. 
 Proof under development.
 
-\subsection{The Complementary AB-Grammar}
-It is intriguing that the rewriting of $B$ in the AB-grammar is symmetric,
-while the $A$ is not.  This led us to think about a complementary version of
-the grammar, which we'll refer to as the A'B-Grammar, which has an alphabet of two
-symbols, $A'$ and $B$, which rewrite in a manner opposite of the AB-grammar:
-$$A'\rightarrow A' A' B A'$$
-$$B\rightarrow B A' A' A' B A' A' A' B$$
-\ni The finite strings generated by this language are simply the reversed
-strings of the AB-grammar system.  In the A'B L-system, the occurance of the
-$BAB$ sequence corresponds to the rewriting of $BA'$, while the occurance of
-the $BAAB$ sequence correspons to the rewriting of $A'B$. We now have the
-following surprising result.
 
+Let us consider the strings produced by the \abg\ and verify that they
+are consistent with the curling rules.  When convenient, we'll identify the instances
+of \q{a} and \q{b} in the productions in the following manner:
+$$b\rightarrow b_0a_0a_1a_2b_1a_3a_4a_5b_2$$
+$$a\rightarrow a_6a_7b_3a_8$$
+\ni As a convenience, we will often think of this grammar mechanism as an
+\term{iterated morphism}, where the rewriting appears in functional form:
+\begin{align*}
+\mu(b)&=b_0a_0a_1a_2b_1a_3a_4a_5b_2\\
+\mu(a)&=a_6a_7b_3a_8
+\end{align*}
+\ni Furthermore, we demand that $\mu(S\cdot T)=\mu(S)\cdot\mu(T)$, with
+the `$\cdot$' operation simply being concatenation.  Though we will rarely
+use it here, the identity for $\mu$ is the \term{empty string}, $\epsilon$:
+$$\mu(\epsilon)=\epsilon$$
+\ni Iterated without limit, the grammar generates infinite strings.  
+All of our strings will be constructed through iterative rewriting.
+We refer to $S$ as the \term{preimage} of $\mu$, or the \term{predecessor}
+of an appropriately (possibly infinite) string $T$ if $\mu(S)=T$.  When we reconstruct predecessor $S$ from $T$ we will informally think of this process
+as \term{parsing} $T$.  When $T$ was constructed through rewriting, parsing is
+always possible.  Indeed, a test for membership in the language generated by
+$\mu$ is the fact that a string can be parsed back to either \q{a} or \q{b}.
+We will sometimes use the \term{address} of a symbol $s$ in $T$ to highlight
+the role of $s$ in the derivation of $T$: if $T$ is $a$ or $b$, its address is
+\addr{a} or \addr{b}, respectively. Otherwise if $s$ is in $T$ and is in the
+image of $s'$ in the derivation $\mu(T')=T$, we write the address of $s$ as
+\addr{\cdots s's} where the address of $s'$ is \addr{\cdots s'}.
+
+We begin with a observations
+about strings which stem from the rewriting of $a$'s and $b$'s using the
+\abg.
+\begin{observation}
+Suppose $S$ is a string which results from rewriting the non-terminal
+\q{a} zero or more times:\footnote{Throughout this discussion the catenation ($\cdot$) symbol
+is used as punctuation for emphasis only; it is otherwise meaningless.}
+\begin{itemize}
+\item The substring $bb$ does not appear in $S$.  Equivalently,
+every \q{b} is preceded by an \q{a}.
+\item The substring $ba\cdot b$ appears only at the left end of a
+rewrite of a \q{b} non-terminal.  The string $b\cdot aab$ only ever appears
+as the right of the rewriting of a \q{b}.  These two features are always, of
+course separated by two triples: $ba\cdot baaabaaab\cdot aab$.
+\item Scanned from (say) left-to-right, the occurrences of single- and twin-$a$'s alternate.
+\end{itemize}
+\end{observation}
+\ni These are easily verified. We consider an import statement about
+the spacing of adjacent $b$'s.
+
+\begin{observation}\label{obs:fourb}
+In words of the \abg, four consecutive $b$'s are never equally spaced.
+\end{observation}
+\ni This is easily observed by considering the rewriting pairs of consecutive $b$'s. We
+use the notation $b\s{n}b$ to represent the occurrence of $n$ \q{a} symbols:
+\begin{itemize}
+\item $b\s{1}b\rightarrow b\s{3}b\s{3}b\s{2}b\s{1}b\s{3}b\s{3}b$,
+\item $b\s{2}b\rightarrow b\s{3}b\s{3}b\s{2}b\s{3}b\s{1}b\s{3}b\s{3}b$, and
+\item $b\s{3}b\rightarrow b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b$.
+\end{itemize}
+
+\ni We can now prove the following important lemma about substring repetitions.
+\begin{lemma}\label{lemma:p4}
+A string $S$ generated by the \abg\ never contains a substring $T^4$ for
+finite, non-trivial $T$; it is \term{biquadratic-free}.
+\end{lemma}
+\Proof We prove by contradiction.  Assume that for nontrivial, $T$, $T^4$ appears
+in the word generated by iteratively rewriting some nonterminal $k$ times, where $k$ is minimal.
+Rather obviously, $k>1$, since the expansions of \q{a} and \q{b} do not contain
+such a string.  Also note that $T$ must contain a \q{b} symbol since $a^4$ never
+occurs.  Indeed, if it contained only one \q{b}, then we would have
+ $$T=UbV$$
+ $$T^4=UbVUbVUbVUbV$$
+\ni but the $b$-free string $vu$ necessarily separates four consecutive \q{b} symbols
+by equal distances which, by Observation~\ref{obs:fourb}, cannot happen.  The string $T$ then, must have
+two or more \q{b} symbols.
+
+Suppose $T$ contains exactly two $b$'s, and consider the adjacency of $T$'s.
+$$\underbrace{P\cdot b\s{x}b\s{y} }_T\underbrace{b\s{x}b\s{y} }_T\underbrace{b\s{x}b\s{y} }_T\underbrace{b\s{x}b\cdot Q}_T$$
+\ni where $y=|P|+|Q|$.  Clearly, $x$ and $y$ must differ, lest we violate Observation~\ref{obs:fourb}.  
+Suppose $x=1$ (signaling the left of a rewrite of \q{b}), then the spacings are either $1-2-1-2-1$ or
+$1-3-1-3-1$, neither of which is possible after a valid rewriting.  A similar argument holds for all other
+pairs of assigning values to $x$ and $y$.  $T$, therefore must have three or more $b$'s.
+
+If $T$ contains several $b$'s we can think of the quadruple $T$ as
+$$T^4=\underbrace{P\cdot b\s{z}\cdots b\s{x}b\s{y} }_T\underbrace{b\s{z}\cdots
+  b\s{x}b\s{y} }_T\underbrace{b\s{z}\cdots b\s{x}b\s{y}
+}_T\underbrace{b\s{z}\cdots b\s{x}b\cdot Q}_T$$ \ni where, again, $y=|P|+|Q|$.
+Here, Observation~\ref{obs:fourb} suggests that $x$, $y$, and $z$ cannot all
+be equal, and one or two must be $3$.  Suppose $x=1$, then $y=z=3$ and we
+force $Q$ (and what follows) to be the result of rewriting a \q{b}.  The entire
+string $T^4$ must be the result of rewriting $S^4$ where $S=u\cdot B$.  This,
+however, is not possible since the appearance of $T^4$ was the first,
+minimizing the number of rewrites, $k$.  A symmetric argument leads to a
+contradiction when $z=2$.
+
+When $y=1$, $P$ is forced to be a singleton, with $T^4$ preceded by a \q{b}, which is sufficient to make it the image
+of $S^4$ where $S=b\cdot U$, which contradicts the first appearance of a quadruple.  When $y=2$, then $Q$ must be a pair with $T^4$ immediately followed by a \q{b} and $T^4$ appears in the result of rewriting four copies of $S=U\cdot b$, leading to a contradiction.
+
+Perhaps the adjacency of $T$'s appears fully between rewriting of $b$'s.  In these cases $x=2$ or $z=1$ or both, with
+$y=3$.  Whenever $x=2$, then $Q$ is part of a triple, and $T^4$ appears as the result of rewriting $S^4$ where $S=U\cdot ba$.  Whenever $z=1$, then a symmetric argument forces $S=ab\cdot U$.
+
+Having shown every possibility for $T$ leads to a contradiction, we find the theorem true.\QED
+
+\medskip
+
+We now demonstrate a relationship between the sequences generated from the
+curl calculation from starting sequences, and the words generated by the
+\abg. We will say that a finite length \twth-string is \term{\abs}
+if it corresponds to a substring of a finite string generated (from \q{a}) by the
+\abg.
+
+We now prove statements about the correctness of each \q{a} and \q{b} in terms
+the sequence that supports it.  We will describe each class of the cases
+based on the form of the address.
+
+\begin{lemma}
+Suppose $S=xT\cdot xT\cdot x$ is a finite, \abs\ string.  Then, any $y$ in
+the expansion $\mu^i(x)$ of the rightmost instance of $x$ has curl at least 2.
+\end{lemma}
+\Proof Suppose $\mu^i(x)=UyV$.  Then 
+$$\mu^i(S)=UyV\mu^i(T)UyV\mu^i(T)UyV$$
+\ni and we have
+$$\mu^i(S)=UY^2yV$$
+\ni where
+$$Y=yV\mu^i(T)U$$
+\ni and thus $y$ has curl at least 2.\QED
+
+\ni Example.  Suppose $S=\mu(b)=baaa\cdot baaa\cdot b_2$.  Then any symbol
+$y$ in the expansion of $b_2$ has curl 2 or 3.
+
+\ni Example.  Suppose $S=a_0a_1a_2$.  Then any symbol in the image of $a_2$
+has curl 2 or 3.
+
+\begin{lemma}\label{lem:properacurl} No \q{a} can have a curl of 3.
+\end{lemma}
+\Proof Suppose it did.  Then there exists and \abs\ $S=\mu(S')=XY^3aZ$, with $Y$ nonempty.
+$S$ must appear in the expansion of \q{a}.  Let's assume this happens, first,
+after $k$ rewrites.  (ie. that $S$ is a subword of $\mu^k(a)$ containing this
+pattern).   First,
+we realize, by inspection, that $k>1$ since no pattern of this form appears
+in the rewrite of $\mu(a)=aaba$.
+
+Suppose we have $S=XYYYa\cdots$.  Then $Y$ must contain both an \q{a} and a \q{b},
+at least.  It is not difficult to see that $\mu(aUa)$ must contain an equal
+number of $bab$ and $baab$ sequences, and that they appear in pairs as
+part of the rewriting of each \q{b}: $$\mu(aba)=aa\underbrace{bab}aaabaaa\underbrace{baab}a=aab\s{1}b\s{3}b\s{3}b\s{2}ba$$
+\ni Now, if $Y$ is $ab$ (or $ba$), then $Y^3$ has the form $ab\s{1}b\s{1}b$
+(or $b\s{1}b\s{1}ba$), whose adjacent singletons are illegal.  Similarly
+all rotations of $aab$ for adjacent pairs.  Rotations of $aaab$ are illegal
+because they form three adjacent triples, which cannot happen, due to Observation~\ref{obs:fourb}.  It follows, then, that $Y$ must have matching numbers
+of single and double $a$'s.  
+
+There are two cases: when the singletons appear to the left of respective doubles---
+that is, all expansions of \q{b} appear within $Y$, and when the doubles appear to the left of the singletons---when some expansion of \q{b} crosses the $YY$ boundary.
+Suppose $Y=Ub\s{3}b\cdots \s{3}bV$, where $U=\cdots\s{1}$ and $V=\s{2}\cdots$.  Then $V\cdot U$ must be the expansion of $n$ $a$'s: $VU$ is $\mu(a)=aaba$, $\mu(aa)=aabaaaba$, or $\mu(aaa)=aabaaabaaaba$.
+Then, with some though about forced patterns the boundary strings $X$ and $aZ$, we can write $XU=X'\mu(a^r)$ and $VaZ=\mu(a^t)Z'$, where
+$r+t=n+1$ and $V$ is at least $aab$:
+\begin{align*}
+S&=XUb\s{3}b\cdots \s{3}bV\cdot Ub\s{3}b\cdots \s{3}bV\cdot  Ub\s{3}b\cdots \s{3}bV\cdot a\\
+ &=X'\mu(a^r)\mu(P)\mu(a^n)\mu(P)\mu(a^n)\mu(P)\mu(a^t)Z'
+\end{align*}
+\ni where $P$ begins and ends with a \q{b} (or $P=b$) and thus
+\begin{align*}
+S &=X'\mu((a^rPa^{t-1})^3a)Z'
+\end{align*}
+\ni which is the rewrite of an \q{a} with a curl of 3, contradicting the minimum selection of $k$.
+
+Otherwise, suppose an expansion of \q{b} spans the $YY$ interface.  Then $Y=U\s{2}b\cdots b\s{1}V$,
+where $VU=baaabaaab$.  Then
+\begin{align*}
+S&=XY^3aZ\\
+ &=XU\s{2}b\cdots b\s{1}V\cdot U\s{2}b\cdots b\s{1}V\cdot U\s{2}b\cdots b\s{1}V\cdot aZ
+\end{align*}
+\ni We set $aPa$ to be the preimage of the sequence $\s{2}b\cdots b\s{1}$ in $Y$. If $U$ is not empty, we have $XU=X'\mu(b)$ and if $V$ is not empty,
+we have $VaZ=\mu(ba)Z'$:
+\begin{align*}
+S &=X'\mu(b)\mu(aP)\mu(b)\mu(P)\mu(b)\mu(P)\mu(ba)Z'
+\end{align*}
+\ni If $V$ is empty, then $VaZ=aabaZ'=\mu(a)Z'$
+\begin{align*}
+S &=X'\mu((bP)^3)\cdot \mu(a)Z'
+\end{align*}
+\ni which is contradictory.
+
+Having considered all the possiblities, the theorem is shown to be true.
+\QED
+
+
+\begin{lemma}\label{lem:abcurl}
+Let $S$ be a finite, \abs\ word.  In an appropriate larger context, every $a\in S$ has curl 2 and every $b\in S$ has curl 3.
+\end{lemma}
+\Proof We seek to demonstrate that each $a_i$ is at least 2 and each $b_i$ is 3.
+Lemma~\ref{lemma:p4} demonstrates that the maximum number of times any substring
+repeats is less than 4.  Likewise for any $a_i$ we need only demonstrate a curl
+of 2 since Lemma~\ref{lem:properacurl} eliminates the possiblity that it is greater.
+
+\ni {Case $a_2$.} We note that $b\rightarrow b\cdot a\cdot a\cdot a_2baaab$, thus $a_2$ has curl 2.
+
+\ni{Case $b_1$.}  We note that $b\rightarrow b\cdot a\cdot a\cdot a\cdot b_1aaab$, thus $b_1$ has a curl of 3.
+
+\ni{Case $a_5$.} Similar patterns validate $a_5$ and $b_2$:
+\begin{align*}
+b&\rightarrow baaab\cdot a \cdot a \cdot a_5b\\
+b&\rightarrow baaab\cdot a \cdot a \cdot a\cdot b_2
+\end{align*}
+\ni demonstrating respective curls of 2 and 3.
+
+\ni Each of these cases is simple, demanding no context beyond the rewrite of a single letter. The validation of the remaining symbols is sensitive to the context of the rewritting of letters in the predecessor.
+
+Let's consider $a_0$.  Here, we make use of the knowledge of symbols forced immediately
+to the left of the rewritten \q{b}.  Since every \q{b} is preceded by an \q{a} we have:
+\begin{align*}
+a\cdot b&\rightarrow a\cdot ab\cdot ab\cdot a_0a_1abaaab
+\end{align*}
+Similarly, $a_1$ is preceded by $ba$ by ``rotating'' the pattern that
+validates $a_0$.
+
+Let's consider $a_6$, which comes from the expansion of an \q{a}. Because
+$a_6$ is on the left edge of the expansion, we must develop further leftmost
+context.  The \q{a} is preceded by any of $ab$, $aba$, or $abaa$:
+\begin{align*}
+ab\cdot a&\rightarrow aabab\cdot aaab\cdot aaab\cdot a_6a_7ba\\
+aba\cdot a&\rightarrow aababaaabaa\cdot aba \cdot aba\cdot a_6a_7ba\\
+abaa\cdot a&\rightarrow aababaaabaaab\cdot aaba\cdot aaba\cdot a_6a_7ba
+\end{align*}
+\ni Notice that any verification of $a_6$ can be turned into a verification
+of the following $a_7$ by dropping the leftmost character (which is always
+an \q{a}) and appending the character immediately to the right.  
+
+The proof
+of the validity $b_3$ is similar:
+\begin{align*}
+ab\cdot a&\rightarrow aab\cdot abaa\cdot abaa\cdot abaa\cdot b_3a\\
+aba\cdot a&\rightarrow aababaaabaaabaab\cdot a\cdot a\cdot a\cdot b_3a\\
+abaa\cdot a&\rightarrow aababaaabaaabaabaaaba\cdot a\cdot a\cdot b_3a
+\end{align*}
+\ni Finally, the $a_8$ is demonstrated as follows:
+\begin{align*}
+ab\cdot a&\rightarrow aababaaaba\cdot aab\cdot aab\cdot a_8\\
+aba\cdot a&\rightarrow aababa\cdot aabaaab\cdot aabaaab\cdot a_8\\
+abaa\cdot a&\rightarrow aababaaabaaabaab\cdot aaab\cdot aaab\cdot a_8
+\end{align*}
+
+\ni Case $b_0$. We note $b_0$ occurs in the expansion of a \q{b} preceded
+by at most three \q{a} symbols.
+
+\ni If $b_0$ occurs after a triple \q{a}, we have 
+$$aaa\cdot b\rightarrow aaba\cdot aaba\cdot aaba\cdot b_0aaabaaab$$
+
+\ni If $b_0$ occurs following a double \q{a}---the marker for the right side
+of a \q{b} expansion---we can deduce more context: $abaaabaaab\cdot aab$.
+The validation of a curl of 3 is straightforward:
+\begin{align*}
+abaa\;abaa\;abaa\cdot b\rightarrow&aababaaabaaabaabaaaba\\
+&aababaaabaaabaabaaaba\\
+&aaba\;baaabaaabaabaaaba\cdot b_0aaabaaab
+\end{align*}
+
+\ni In cases where a single \q{a} appears before a \q{b}:
+$$bab'_0$$
+\ni the image appears as, itself, $bab_0$:
+$$baaabaaab~aaba\cdot b_0aaabaaab$$
+\ni which does not provide enough context to validate the $b_0$.  Suppose, however, that the $b'_0$ is
+proven correct, say by the pattern $TTTb'_0$, as might happen by recursive application of one
+of the prior cases.  Then it must be the case that the rewrite is $\mu(T)\mu(T)\mu(T)b_0$ which is sufficient
+to demonstate the necessary pattern.  Thus, if the address of $b_0$ ends in the finite string $\cdots xb_0\cdots b_0b_0b_0$ where $x$ is validated, induction demonstrates the validity of each of the $b_0$ instances.  Otherwise,
+validation fails.  We term instances of $b_0$ whose heritage suffixes contain only instances of $b_0$ a
+\term{left edge}.
+
+Cases $a_3$ and $a_4$. We note that the $a_4$ is validated by the same string, rotated, as the $a_3$.
+This results from the fact that the validation of the $a_3$ ends in a \q{b}, so
+it must start in a \q{a} (lest the repeat generated adjacent $b$'s).  This means
+the repeated sequence can have its initial \q{a} moved to the end, after the
+\q{b}, validating the $a_4$.  Thus we only consider the validation of $a_3$.
+
+Any instance of $a_3$ has address \addr{\cdots b_ia_3}, where $i$ is between 0 and 3.  In any instance
+where the $b_i$ is prefixed by 2 (or even 3) $a$'s we have
+\begin{align*}
+ \cdots aa\cdot b_i&\rightarrow a\cdot abaaab\cdot abaaab\cdot a_3aab
+\end{align*}
+
+The only situation where $b_i$ is prefixed by a single \q{a} is, as we have
+seen, when $i=0$, where the addresses end \addr{\cdots b_jb_0a_3}.  Notice that the
+string immediately to the left of $a_3$ is always $baaab$.  This, in turn is
+always preceded by an expansion of the left context of $b_j$ which is always
+an \q{a}:
+$$aaba\;aaba\;baaabaaab\;aaba\cdot baaaba_3$$ Suppose that $j$ is $2$, that is
+that the $a_3$ is in the expansion of a right-most \q{b} in a \q{b} re-write.
+Then we have a 141 character repeat:
+\begin{align*}
+baaabaaa\cdot b_2\rightarrow{} & baaabaaab~aaba~aaba~aaba~baaabaaab~aaba~aaba~aaba\cdot b_0aaabaaab\\
+\rightarrow baaab\cdot{}aaab&\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{1}baaab\cdot\\
+  aaab&\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{3}b\s{3}b\s{1}b\s{3}b\s{3}b\s{2}b\s{1}baaab\cdot a_3\cdots
+\end{align*}
+\ni This repeat begins with the right portion of \q{b} (5
+characters in) in the corresponding $b_1$, followed by the $a_3a_4a_5$ and the
+5 characters to the left of the $a_3$.  This is preceded in the span between
+$b_0$ and $b_1$.
+
+In cases where the address of $a_3$ does not contain a $b_2$ in any finite
+suffix of its address, the curl is insufficint, and is calculated as 1.
+\QED
+
+It is useful to consider the \term{complementary \abg}, 
+which we will often write as the morphism $\rmu$. It differs from $\mu$ by
+its action on \q{a}:
+\begin{align*}
+\rmu(a)&=abaa\\
+\rmu(b)&=baaabaaab
+\end{align*}
+\ni Writing the reverse of a word, $w$ as $\tilde{w}$, it is easy to see
+that $\rmu(w)=\widetilde{\mu(\tilde{w})}$.  With a little thought, many of
+our \abg\ observations hold in the complementary case.
+
+\begin{corollary}
+The following are true about the complementary \abg:
+\begin{enumerate}
+\item The following properties of true of each string $S$ generated by the
+\rabg:
+\begin{itemize}
+\item The substring $bb$ does not appear in $S$.
+\item The string $baa\cdot b$ appears uniquely in the image $\rmu(ab)$;
+the string $b\cdot ab$ appears uniquely in the image $\rmu(ba)$.
+\item Scanned from left-to-right, the occurances of single- and twin-$a$'s alternate.
+\end{itemize}
+\item In words of the \rabg, four consecutive $b$'s are never equally spaced.
+\item Strings generated by the \rabg\ are biquadratic-free.
+\end{enumerate}
+\end{corollary}
+
+\begin{lemma}\label{lem:rabcurl}
+The characters of any finite \rabs\ string $S$, in an appropriate larger context, obey the curling rules: every $a\in S$ has curl 2 and every $b\in S$ has curl 3.
+\end{lemma}
+\ni The proof is omitted, but follows in a rather obvious manner the proof
+of Lemma~\ref{lem:abcurl}.
+
+\ni[Ed. This proof to be moved to appendix, or dropped if obvious. \Proof Proof of complementary grammar.  Suppose we label
+$$\rmu(a)=a_8b_3a_7a_6$$
+\ni then, we have the following cases:
+
+\ni Cases $a_2$, $b_1$, and $a_5$.  Trivially the same.
+
+\ni Case $a_0$.  $b$ is preceded by $a$.  Thus
+\begin{align*}
+aba\cdot b&\rightarrow abaabaaabaaababaaba_0aabaaab FIX\\
+abaa\cdot b&\rightarrow abaabaaabaaababa\cdot aab\cdot aab\cdot a_0aabaaab\\
+abaaa\cdot b&\rightarrow abaabaaabaaababaaaba\cdot aab\cdot aab\cdot a_0aabaaab
+\end{align*}
+
+\ni Case $a_7$. We're expanding the letter \q{a}:
+\begin{align*}
+ab\cdot a&\rightarrow abaabaaabaa\cdot ab\cdot ab\cdot a_7a\\
+aba\cdot a&\rightarrow abaabaa\cdot abaaab\cdot abaaab\cdot a_7a\\
+abaa\cdot a&\rightarrow abaabaaabaaabab\cdot aaab\cdot aaab\cdot a_7a
+\end{align*}
+
+\ni Case $a_6$. We're expanding the letter \q{a}:
+\begin{align*}
+ab\cdot a&\rightarrow abaabaaabaaa\cdot ba\cdot ba \cdot a_6\\
+aba\cdot a&\rightarrow abaabaaa\cdot baaaba\cdot baaaba \cdot a_6\\
+abaa\cdot a&\rightarrow abaabaaabaaababa\cdot aaba\cdot aaba\cdot a_6
+\end{align*}
+
+\ni Case $a_8$. We're expanding the letter \q{a}:
+\begin{align*}
+ab\cdot a&\rightarrow abaab\cdot aaab\cdot aaab\cdot a_8baa\\
+aba\cdot a&\rightarrow abaabaaabaaabab\cdot a\cdot a\cdot a_8baa\\
+abaa\cdot a&\rightarrow abaabaaabaaababaaab\cdot a\cdot a\cdot a_8baa
+\end{align*}
+
+\ni Case $b_3$. We're expanding the letter \q{a}:
+\begin{align*}
+ab\cdot a&\rightarrow ab\cdot aaba\cdot aaba\cdot aaba\cdot b_3aa\\
+aba\cdot a&\rightarrow abaabaaabaaabab\cdot a\cdot a\cdot a\cdot b_3aa\\
+abaa\cdot a&\rightarrow abaabaaabaaababaaab\cdot a\cdot a\cdot a\cdot b_3aa
+\end{align*}
+FINISH
+\QED]
+
+This leads to a surprising result:
 \begin{theorem}
-The infinite strings generated by the AB-grammar are the same as those generated by the A'B-grammar.
+In strings generated by the \abg, the curl can be interpretted in both directions.
 \end{theorem}
-\ni This leads, rather obviously, to the following statement:
-\begin{corollary}
-Every infinite string generated by the AB-grammar can be parsed consistently
-by either the AB-grammar or by the A'B-grammar.
-\end{corollary}
 
-A somewhat surprising result is our interpretation of similarly structured
-curling sequences.
-\begin{corollary}
-Suppose $\scS$ is an 23-sequence derived from an infinite AB-tiling. Then
-$\scS$ can also be interepreted as a curling sequence in reverse. 
-That is, if $s$ is a digit
-in $\scS$ then the sequence to the right of $s$ in $\scS$ can be written as
-$Y^kX$ (where $Y$ is finite, and $X$ is infinite) with $k$ attaining maximum
-value $s$.
-\end{corollary}
-\ni It is difficult to fully appreciate the impact of this result.  A little
-inspection of the example at the top of this section validates the
-interpretation of the curl in both directions.  It also suggests that, in a
-finite string, extending the starting sequence is algorithmically related to
-the development curls of the tail.
+\Proof By Lemma~\ref{lem:abcurl}, we know the \abg\ generates strings whose
+letters can be interpreted as the curl of the string to the left.  Since
+the \rabg\ generates the language of reversed words from the \abg, and since,
+by Lemma~\ref{lem:rabcurl}, the \rabg\ also generates strings whose letters
+can be interpreted as the curl of strings to the right the result is that
+each letter of both grammars can be interpreted as the curl in both directions.\QED
 
-\subsection{The AB Neighborhoods}
 
-\section{Reflections on 2,3-curling Sequences}\label{sect:reflections}
+\section{Reflections on \twth-curling Sequences}\label{sect:reflections}
 
 \section{Rotten Sequences}\label{sect:rotten}
 \subsection{Computational Details}
@@ -288,15 +657,15 @@ the development curls of the tail.
 \section*{Appendix: Proofs}\label{app:proofs}
 
 \ni{\bf Proof of Theorem~\ref{thm:aperiodic}.} (motivated by Gr\"unbaum, p. 573, 10.6.3).
-An infinite AB-sequence (a \term{curly sequence}) cannot be written as infinitely many repetitions of
-a finite block of A's and B's.
+An infinite \ab-sequence (a \term{curly sequence}) cannot be written as infinitely many repetitions of
+a finite block of $a$'s and $b$'s.
 
-Suppose it were the case—--that is an infinite AB-sequence $\scS$ can be
+Suppose it were the case—--that is an infinite \ab-sequence $\scS$ can be
 written as a finite sequence $S$ of length $m$, repeated.  Then, since $\scS$
 is an curly sequence its terms can be composed consistently using the
-AB-grammar, forming a precursor sequence, $\scS'$ (which is also curly) with
-each letter of $\scS^{-1}$ expanding to 4 (in the case of an $A$) or 9 (in the
-case of a $B$) letters in $\scS$.  We may, of course do this any finite number
+\abg, forming a precursor sequence, $\scS'$ (which is also curly) with
+each letter of $\scS^{-1}$ expanding to 4 (in the case of an \q{a}) or 9 (in the
+case of a \q{b}) letters in $\scS$.  We may, of course do this any finite number
 of times, say, $n$, yielding $\scS^{-n}$ whose letters that span more than
 $4^n$ letters in $\scS$.  If $n$ is sufficiently large, then $m < 4^n$.  But
 shifting by $m$---a supposed symmetry of $\scS$ does not yield a symmetry in
@@ -304,18 +673,17 @@ $\scS^{-n}$, so we have that $\scS$ is non-periodic.\QED
 
 \ni{\bf Alternative proof.}(Modeled after Senechal\cite{Se95})  
 We remind the reader that the
-rewriting matrix for the AB grammar is \term{primitive}.  A primitive matrix
-$A$ is one whose entries are non-negative with, for some $k$, the entries of
-$A^k$ are all positive. (For our rewriting grammar, $k=1$.)  Such a matrix
+rewriting matrix for the \abg\ is \term{primitive}.  A primitive matrix
+\q{Q} is one whose entries are non-negative with, for some $k$, the entries of
+$Q^k$ are all positive. (For our rewriting grammar, $k=1$.)  Such a matrix
 demonstrates that ``all letters eventually appear'' in the rewriting of any
 patch of letters.  It is sufficient, then to consider the rewriting of the
-letter $A$.  Here, $A\rightarrow A A B A \rightarrow A A B A B A A A B A A A B
-\rightarrow \cdots$.  At each stage we can count the number of letters that
-appear, and we can compute the ratio of $A$'s and $B$'s.  As we demonstrated
-in the text the ratio of $A$'s to $B$'s is $\sqrt{6}$ to $1$.  Since
+letter \q{a}.  Here, $a\rightarrow aaba \rightarrow aababaaabaaab \rightarrow \cdots$.  At each stage we can count the number of letters that
+appear, and we can compute the ratio of $a$'s and $b$'s.  As we demonstrated
+in the text the ratio of $a$'s to $b$'s is $\sqrt{6}$ to $1$.  Since
 $\sqrt{6}$ is irrational the rewriting system does not generate an infinite
 periodic sequence.  Why? If the sequence had been periodic, there would be
-rational ratio of $A$'s and $B$'s in each block, preserved through simple
+rational ratio of $a$'s and $b$'s in each block, preserved through simple
 repetition.\QED
 
 \medskip
