@@ -1,0 +1,5 @@
+#Each file should contain sequences generated via a different method
+#Comments at the top should describe how the sequence is generated
+#This pipeline will format the data with a comment before each sequence: 
+#ccurlseq -l -s | awk -F: '{print "#" length($2) ":" $1 "\n" $2}'
+
