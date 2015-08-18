@@ -12,6 +12,8 @@ int kernel = 0;
 void Usage(char *pn)
 {
   fprintf(stderr,"Usage: %s [-fkp]\n",pn);
+  fprintf(stderr,"\t-l\tParse using left-handed grammar (a->abaa).\n");
+  fprintf(stderr,"\t-r\tParse using right-handed grammar (a->aaba).\n");
   fprintf(stderr,"\t-k\tPrint the flawless parse-able kernel sequence.\n");
   fprintf(stderr,"\t-f\tAssume string is flawless; start at left in parse.\n");
   fprintf(stderr,"\t-p\tPrint pretty.\n");
@@ -34,6 +36,12 @@ void parseArgs(int argc, char **argv)
       case 'k':
 	kernel = 1;
 	break;
+      case 'r':
+	right = 1;
+	break;
+      case 'l':
+	right = 0;
+	break;
       default:
 	Usage(pn);
       }
@@ -42,41 +50,45 @@ void parseArgs(int argc, char **argv)
 }
 
 int begins(char *s,char *prefix)
+// return true if 's' has 'prefix' as prefix
 {
   int l = strlen(prefix);
   return 0 == strncmp(s,prefix,l);
 }
 
 char *parse(char *left, char *align)
+// parse string starting at left, with 'align' pointing to key point
 {
   char *p,*q;
   char *result = malloc(strlen(left)+1);
   char *rp = result;
   int done;
   if (!flawless) {
-    if (begins(align,"323")) p = align+1;
-    else if (begins(align,"3223")) p = align;
+    // 323 indicates one side of 'b' expansion; 3223 the other
+    // p will point to last character of an expansion
+    if (begins(align,"323")) p = align+right; // points to end of right 'a' or end of left 'b'
+    else if (begins(align,"3223")) p = align+2*!right;
     else {
-    fprintf(stderr,"Parsing misaligned.");
-    return 0;
-  }
-  // first, move left, based on the current alignment character
-  done = 0;
-  while (!done) {
-    // *p is 2 or 3.  Check if the pointer can be validly moved back.
-    if (*p == '2') {
-      q = p+1-4;
-      if (q >= left && begins(q,"2232")) {
-	p = q-1;
-      } else done = 1;
-    } else if (*p == '3') {
-      q = p+1-9;
-      if (q >= left && begins(q,"322232223")) {
-	p = q-1;
-      } else done = 1;
-    } else { done = 1; continue; }
-  }
-  p++;
+      fprintf(stderr,"Parsing misaligned.");
+      return 0;
+    }
+    // first, move left, based on the current alignment character
+    done = 0;
+    while (!done) {
+      // *p is 2 or 3.  Check if the pointer can be validly moved back.
+      if (*p == '2') {
+	q = p+1-4;
+	if (q >= left && ((right ? begins(q,"2232") : begins(q,"2322")))) {
+	  p = q-1;
+	} else done = 1;
+      } else if (*p == '3') {
+	q = p+1-9;
+	if (q >= left && begins(q,"322232223")) {
+	  p = q-1;
+	} else done = 1;
+      } else { done = 1; continue; }
+    }
+    p++;
   } else {
     p = left;
   }
@@ -89,7 +101,7 @@ char *parse(char *left, char *align)
   // now print out parse, heading right
   done = 0;
   while (!done) {
-    if (*p == '2' && begins(p,"2232")) {
+    if (*p == '2' && (right ? begins(p,"2232") : begins(p,"2322"))) {
       if (pretty) {
 	strcpy(rp,"<22>");
 	rp += 4;

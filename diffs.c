@@ -9,22 +9,26 @@ char *s1=0;
 char *s2=0;
 void Usage(char *pn)
 {
-  fprintf(stderr,"Usage: %s s1 s2\n",pn);
+  fprintf(stderr,"Usage: %s [--] s1 s2\n",pn);
+  fprintf(stderr,"\t--\tstrings start with -\n");
   exit(1);
 }
 
+int quoted = 0;
 void parseArgs(int argc, char **argv)
 {
   char *pn = *argv;
   while (argv++,--argc) {
     char *arg = *argv;
-    if (*arg == '-') {
+    if (*arg == '-' && !quoted) {
       switch (*++arg) {
+      case '-':
+	quoted = 1;
+	break;
       default:
 	Usage(pn);
       }
-    }
-    if (s1 == 0) s1=arg;
+    } else if (s1 == 0) s1=arg;
     else if (s2 == 0) s2=arg;
     else Usage(pn);
   }

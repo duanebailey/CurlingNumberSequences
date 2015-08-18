@@ -1,4 +1,4 @@
-// COMMENTS
+// Computes the distance between letters identified by two addresses.
 // (c) 2015 duane a. bailey
 #include <stdio.h>
 #include <stdlib.h>
