@@ -1,7 +1,15 @@
+% A Grammatical Approach to the Curling Number Conjecture
+% (c) 2015 duane a. bailey et al.
+
+% Todo:
+% * Finish the proof of the complementary grammar.
+% * 
+
 \documentclass[11pt]{article}
 \usepackage[pdftex]{graphicx}
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{mathtools}
 \oddsidemargin-.25in
 \def\emph#1{{\em #1\/}}
 \def\term#1{\emph{#1}}
@@ -20,10 +28,13 @@
 \def\twth{$(2,3)$}
 \def\abg{\ab-grammar}
 \def\abs{\ab-structured}
-\def\rmu{\tilde{\mu}}
-\def\ra{\tilde{a}}
-\def\rabg{$(\tilde{a},b)$-grammar}
-\def\rabs{$(\tilde{a},b)$-structured}
+\def\la#1{\overset{\leftarrow}{#1}}
+\def\lla#1{\overset{\longleftarrow}{#1}}
+\def\ra#1{\overset{\rightarrow}{#1}}
+\def\rmu{\la{\mu}}
+\def\ra{\la{a}}
+\def\rabg{$(\la{a},b)$-grammar}
+\def\rabs{$(\la{a},b)$-structured}
 \def\q#1{`$#1$'}
 \def\addr#1{$[#1]$}
 \newtheorem{obs}{Observation}
@@ -31,7 +42,7 @@
 
 
 \begin{document}
-\title{Aperiodicity and the Curling Number Conjecture}
+\title{A Grammatical Approach to the Curling Number Conjecture}
 \author{D. A. Bailey\thanks{Contact.}\and D. Bonafilia\and T. Liu\and R. Poudyal\and A. Templeton\and D. Timilsina}
 \maketitle
 
@@ -43,11 +54,12 @@ expansion of $S_0=S$ by appending the curling number: $S_{i+1}=S_ic(S_i)$.
 The \term{curling number conjecture} suggests that this process ultimately
 produces a string whose curling number is $1$.  We present new results on
 \term{\twth-curling sequences}.  We demonstrate an interesting relationship
-between the tails of curling sequences and words in an aperiodic grammar we
-call the \term{\abg}.  We construct an \term{infinite curling sequence}
+between the tails of curling sequences and words in a pair of aperiodic \term{curling} grammars.  We demonstrate the existance of a \term{doubling infinite curling sequence}
 that appears consistent with \term{\twth-curling sequences} and prove a number
 of interesting results.  We also report new data on the numbers of
-\term{rotten sequences} up to length $48$.
+\term{unstable sequences}, including
+\term{rotten sequences} up to length $48$ and active sequences up to length
+$42$.
 \end{abstract}
 
 \section{Introduction}
@@ -74,7 +86,7 @@ computational approaches were used to identify good candidates for $48<n\le 80$.
 \label{fig:tau}
 \end{figure}
 
-Given so little data, it is not clear what the growth pattern of $\tail{n}$ might be.  In an attempt to better understand sudden jumps $\tail{n}$, considerable
+Given so little data, it is not clear what the growth pattern of $\tail{n}$ might be.  In an attempt to better understand sudden jumps in $\tail{n}$, considerable
 interest was given to \term{especially good starting sequences}, the unique sequences that led to new maximum values for tail length.  These sequences, again reproduced from \cite{Ch13}, are presented in Table~\ref{tab:egs}.
 
 \begin{table}
@@ -110,7 +122,7 @@ the following properties:
 \begin{description}
 \item[P2] Each sequence starts with a $2$.
 \item[P3] No sequence contains adjacent $3$'s.
-\item[P4] No sequence contains a nonempty string $V^4$.
+\item[P4] No sequence contains a nonempty \term{biquadratic} string, $V^4$.
 \end{description}
 \end{quote}
 \ni We found these properties similar to properties associated with the study
@@ -139,12 +151,13 @@ strings terminate immediately if a 1 is encountered or, within a single step
 if a 4 is encountered.  Remarkably, even this restricted form of this problem
 remains difficult to analyze.
 
-As motivation for the following discussion, we present, here, the tail
-of the especially good starting sequence for $n=8$:
+As motivation for the following discussion, we consider the 
+especially good starting sequence for $n=8$:
 $$S=2 3 2 2 2 3 2 3$$
-\ni is extended to
+\ni whose tail $S^{(e)}$ extends another 58 digits:
 $$S^{(e)}=2 3 2 \cdot 2 2 3 2 \cdot 3 2 2 2 3 2 2 2 3\cdot2 2 3 2\cdot2 2 3 2\cdot2 2 3 2\cdot3 2 2 2 3 2 2 2 3\cdot 2 2 3 2 \cdot 2 2 3 2\cdot 2 2 3 2\cdot 3 2 2 2 3 2 2 2 3\cdot 2 2 3 2\cdot 2 3 3 2$$
-\ni We have inserted punctuation to delineate motifs that are interesting in this pattern.  Aside from the beginning and end ``boundary'' words, the entire sequence is constructed from two sequences:
+\ni We have inserted the concatenation operator ($\cdot$) as punctuation to delineate motifs that are interesting in this pattern.\footnote{Throughout this discussion the catenation ($\cdot$) symbol
+is used as punctuation for emphasis only; it is otherwise meaningless.}  Aside from the beginning and ending ``boundary'' words, the entire sequence is constructed from two sequences:
 \begin{align*}
 a&=2 2 3 2\\
 b&=3 2 2 2 3 2 2 2 3
@@ -156,38 +169,52 @@ These parallels will be formalized in the next section.
 
 \subsection{The \ab-Grammar}
 
-We now construct an L-system---a parallel string-rewriting system---inventively based on
+We now construct an L-system---a parallel string-rewriting system\cite{Rz76}---inventively based on
 an alphabet of two symbols, $a$ and $b$, that contains two productions:
 $$a\rightarrow a a b a$$
 $$b\rightarrow b a a a b a a a b$$
 \ni We call this system, the \term{curling grammar} or the \term{\abg}.  The grammar starts with a string, $S$, and each symbol in the string
-is rewritten, in parallel, to produce a new string.  Table~\ref{tab:deriv}
+is consistently rewritten, in parallel, to produce a new string.  Table~\ref{tab:deriv}
 demonstrates the action of the \abg\ on symbols \q{a} and \q{b}.
+
+\ni As a convenience, we will often think of this grammar mechanism as an
+\term{iterated morphism}\cite{Lo97,Lo02,Lo05}, where the rewriting appears in functional form:
+\begin{align*}
+\mu(b)&=b_0a_0a_1a_2b_1a_3a_4a_5b_2\\
+\mu(a)&=a_6a_7b_3a_8
+\end{align*}
+\ni Where the indicies are annotations that help us distinguish between
+instances of \q{a} and \q{b}.  We demand that $\mu(S\cdot T)=\mu(S)\cdot\mu(T)$, with
+the `$\cdot$' operation simply being concatenation.  Though we will rarely
+use it here, the identity for $\mu$ is the \term{empty string}, $\epsilon$:
+$$\mu(\epsilon)=\epsilon$$
+\ni Iterated without limit, the grammar generates infinite strings.  
+All of our strings will be constructed through iterative rewriting.
+We refer to $S$ as the \term{preimage} of $\mu$, or the \term{predecessor}
+of an appropriately (possibly infinite) string $T$ if $\mu(S)=T$.  When we reconstruct predecessor $S$ from $T$ we will informally think of this process
+as \term{parsing} $T$.  When $T$ was constructed through rewriting, parsing is
+always possible.  Indeed, a test for membership in the language generated by
+$\mu$ is the fact that a string can be parsed back to either \q{a} or \q{b}.
+We will sometimes use the \term{address} of a symbol $s$ in $T$ to highlight
+the role of $s$ in the derivation of $T$: if $T$ is $a$ or $b$, its address is
+\addr{a} or \addr{b}, respectively. Otherwise if $s$ is in $T$ and is in the
+image of $s'$ in the derivation $\mu(T')=T$, we write the address of $s$ as
+\addr{\cdots s's} where the address of $s'$ is \addr{\cdots s'}.
 
 \begin{table}
 \begin{center}
-\begin{tabular}{|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-Step & $A_i=\mu^i(a)$ \\\hline
-0 & $a$\\
-1 & $aaba$\\
-2 & $aaba\;aaba\;baaabaaab\;aaba$\\
- &\\
-i+1 &  $aaba\;aaba\;b...b\;aaba$ \\
-\hline
-\end{tabular}\\[0.1in]
-\begin{tabular}{|c|c|}
-\hline
-step &$B_i=\mu^i(b)$\\\hline
-0 & $b$\\
-1 & $baaabaaab$\\
-2& $baaabaaa\;aaba\;aaba\;aaba\;baaabaaab\;aaba\;aaba\;aaba\;baaabaaab$\\
-&\\
-i+1 & $baaabaaab\;a...a\;baaabaaab$\\
+Step & $A_i=\mu^i(a)$ & $B_i=\mu^i(b)$ \\\hline
+0 & $a$&$b$\\
+1 & $aaba$&$baaabaaab$\\
+2 & $aaba\;aaba\;baaabaaab\;aaba$&$baaabaaa\;aaba\;aaba\;aaba\;baaabaaab\;aaba\;aaba\;aaba\;baaabaaab$\\
+ &&\\
+i+1 &  $aaba\;aaba\;b...b\;aaba$& $baaabaaab\;a...a\;baaabaaab$\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Action of the curling grammar on symbols \q{a} (above) and \q{b} (below).}
+\caption{Action of the \abg\ on symbols \q{a} (left) and \q{b} (right).}
 
 \label{tab:deriv}
 \end{table}
@@ -201,23 +228,22 @@ rewriting or \term{decomposing} of non-terminals into others) and its inverse,
 \term{composition} (the consistent parsing or \term{composing} of letters to
 form their anticedents).  The consistent composition of infinite strings is driven by the following observation.
 \begin{observation}
-The pattern $bab$ uniquely corresponds to rewriting an $ab$ pattern,
-while the pattern $baab$ uniquely corresponds to rewriting $ba$ patterns.
+The pattern \q{bab} uniquely corresponds to rewriting an \q{ab} pattern,
+while the pattern \q{baab} uniquely corresponds to rewriting \q{ba} patterns.
 \end{observation}
-\ni This knowledge allows us reverse the rewriting process:
-replace the bracketed part of any instances of $ba\cdot baaabaaab\cdot aab$
-by a $b$ and then replace all instances of $aaba$ by $a$.
+\ni This knowledge allows us reverse the rewriting process.
 
 We can evaluate the growth characteristics of the rewriting rules with a
-substitution matrix and characteristic equation:
+substitution matrix and characteristic equation\cite{Se95}:
 $$Q=\left( \begin{array}{cc} 3 & 6 \\ 1 & 3 \end{array} \right),
-\lambda^2-6\lambda +3=0$$ \ni (The left column of $Q$ describes the expansion
-of \q{a}, the right column, \q{b}.) The eigenvalues of $Q$ are
+\lambda^2-6\lambda +3=0$$ \ni The left column of $M$ describes the expansion
+of \q{a}, the right column, \q{b}.  When $M$ is multiplied on the left by
+a row vector, $v$, that describes the count of \q{a} and \q{b} symbols in a string $S$, $vM$ represents the counts in $\mu(S)$.  In the limit behavior of the application of $M$ can be determined by examining the characteristic equation.  The eigenvalues of $M$ are
 $\lambda_1=3+\sqrt{6}\approx 5.45$ and $\lambda_2=3-\sqrt{6}\approx 0.55$.
 The eigenvalue $\lambda_1$ corresponds to the steady-state growth rate
 associated with this rewriting system.  Thus, we expect that words generated
 by this grammar will generally expand by a bit more than $g=5.45$ on each
-rewrite.  The corresponding eigenvector, $v_1=(\sqrt{6},1)$ describes relative
+rewrite.  The corresponding left eigenvector, $v_1=(\sqrt{6},1)$ describes relative
 populations of \q{a} and \q{b} symbols (respectively), and we expect rewriting to
 cause nontrivial strings to converge to having about $\rho=71\%$ $A$ symbols.
 Again, these relative populations parallel what is seen in practice in curling
@@ -246,63 +272,38 @@ between \ab-tilings and infinite curling sequences.
 
 \begin{theorem}
 Suppose $\scT$ is an infinite \ab-tiling.  If we replace all \q{a} symbols with
-2's and all \q{B} symbols with 3's, then the resulting string $\scS$ can be
+2's and all \q{b} symbols with 3's, then the resulting string $\scS$ can be
 interpreted as a curling sequence.  That is, if $s$ is a digit
 in $\scS$ then the sequence to the left of $s$ in $\scS$ can be written as
 $XY^k$ (where $Y$ is finite, and $X$ is infinite) with $k$ attaining maximum
 value $s$.
 \end{theorem}
-\ni The proof of this requires careful analysis of individual cases that
+\ni The proof requires careful analysis of individual cases that
 enumerate the different ways that $s$ was the result of rewriting. 
-Proof under development.
-
 
 Let us consider the strings produced by the \abg\ and verify that they
 are consistent with the curling rules.  When convenient, we'll identify the instances
 of \q{a} and \q{b} in the productions in the following manner:
 $$b\rightarrow b_0a_0a_1a_2b_1a_3a_4a_5b_2$$
 $$a\rightarrow a_6a_7b_3a_8$$
-\ni As a convenience, we will often think of this grammar mechanism as an
-\term{iterated morphism}, where the rewriting appears in functional form:
-\begin{align*}
-\mu(b)&=b_0a_0a_1a_2b_1a_3a_4a_5b_2\\
-\mu(a)&=a_6a_7b_3a_8
-\end{align*}
-\ni Furthermore, we demand that $\mu(S\cdot T)=\mu(S)\cdot\mu(T)$, with
-the `$\cdot$' operation simply being concatenation.  Though we will rarely
-use it here, the identity for $\mu$ is the \term{empty string}, $\epsilon$:
-$$\mu(\epsilon)=\epsilon$$
-\ni Iterated without limit, the grammar generates infinite strings.  
-All of our strings will be constructed through iterative rewriting.
-We refer to $S$ as the \term{preimage} of $\mu$, or the \term{predecessor}
-of an appropriately (possibly infinite) string $T$ if $\mu(S)=T$.  When we reconstruct predecessor $S$ from $T$ we will informally think of this process
-as \term{parsing} $T$.  When $T$ was constructed through rewriting, parsing is
-always possible.  Indeed, a test for membership in the language generated by
-$\mu$ is the fact that a string can be parsed back to either \q{a} or \q{b}.
-We will sometimes use the \term{address} of a symbol $s$ in $T$ to highlight
-the role of $s$ in the derivation of $T$: if $T$ is $a$ or $b$, its address is
-\addr{a} or \addr{b}, respectively. Otherwise if $s$ is in $T$ and is in the
-image of $s'$ in the derivation $\mu(T')=T$, we write the address of $s$ as
-\addr{\cdots s's} where the address of $s'$ is \addr{\cdots s'}.
 
 We begin with a observations
 about strings which stem from the rewriting of $a$'s and $b$'s using the
 \abg.
 \begin{observation}
 Suppose $S$ is a string which results from rewriting the non-terminal
-\q{a} zero or more times:\footnote{Throughout this discussion the catenation ($\cdot$) symbol
-is used as punctuation for emphasis only; it is otherwise meaningless.}
+\q{a} zero or more times:
 \begin{itemize}
-\item The substring $bb$ does not appear in $S$.  Equivalently,
+\item The substring \q{bb} does not appear in $S$.  Equivalently,
 every \q{b} is preceded by an \q{a}.
-\item The substring $ba\cdot b$ appears only at the left end of a
-rewrite of a \q{b} non-terminal.  The string $b\cdot aab$ only ever appears
+\item The substring \q{ba\cdot b} appears only at the left end of a
+rewrite of a \q{b} non-terminal.  The string \q{b\cdot aab} only ever appears
 as the right of the rewriting of a \q{b}.  These two features are always, of
 course separated by two triples: $ba\cdot baaabaaab\cdot aab$.
 \item Scanned from (say) left-to-right, the occurrences of single- and twin-$a$'s alternate.
 \end{itemize}
 \end{observation}
-\ni These are easily verified. We consider an import statement about
+\ni These are easily verified. We consider an important statement about
 the spacing of adjacent $b$'s.
 
 \begin{observation}\label{obs:fourb}
@@ -319,16 +320,231 @@ use the notation $b\s{n}b$ to represent the occurrence of $n$ \q{a} symbols:
 \ni We can now prove the following important lemma about substring repetitions.
 \begin{lemma}\label{lemma:p4}
 A string $S$ generated by the \abg\ never contains a substring $T^4$ for
-finite, non-trivial $T$; it is \term{biquadratic-free}.
+finite, non-trivial $T$; it meets property P4 and is \term{biquadratic-free}.
 \end{lemma}
-\Proof We prove by contradiction.  Assume that for nontrivial, $T$, $T^4$ appears
+
+\medskip
+
+We now demonstrate a relationship between the sequences generated from the
+curl calculation from starting sequences, and the words generated by the
+\abg. We will say that a finite length \twth-string is \term{\abs}
+if it corresponds to a substring of a finite string generated (from \q{a}) by the
+\abg.
+
+We now prove statements about the correctness of each \q{a} and \q{b} in terms
+the sequence that supports it.  We will describe each class of the cases
+based on the form of the address.
+
+\begin{lemma}\label{lem:curltwo}
+Suppose $S=xT\cdot xT\cdot x$ is a finite, \abs\ string.  Then, any $y$ in
+the expansion $\mu^i(x)$ of the rightmost instance of $x$ has curl at least 2.
+\end{lemma}
+\Proof Suppose $\mu^i(x)=UyV$.  Then 
+$$\mu^i(S)=UyV\mu^i(T)UyV\mu^i(T)UyV$$
+\ni and we have
+$$\mu^i(S)=UY^2yV$$
+\ni where
+$$Y=yV\mu^i(T)U$$
+\ni and thus $y$ has curl at least 2.\QED
+
+\ni {\sc Example.}  Suppose $S=\mu(b)=baaa\cdot baaa\cdot b_2$.  Then any symbol
+$y$ in the expansion of $b_2$ has curl 2 or 3.
+
+\ni {\sc Example.}  Suppose $S=a_0a_1a_2$.  Then any symbol in the image of $a_2$
+has curl 2 or 3.
+
+\begin{lemma}\label{lem:properacurl} No \q{a} can have a curl of 3.
+\end{lemma}
+
+\begin{lemma}\label{lem:abcurl}
+Let $S$ be a finite, \abs\ word.  In an appropriate larger context, every $a\in S$ has curl 2 and every $b\in S$ has curl 3.
+\end{lemma}
+
+It is useful to consider the \term{complementary \abg}, 
+which we will often write as the morphism $\rmu$. It differs from $\mu$ by
+its action on \q{a}:
+\begin{align*}
+\rmu(a)&=abaa\\
+\rmu(b)&=baaabaaab
+\end{align*}
+\ni Writing the reverse of a word, $w$ as $\la{w}$, it is easy to see
+that $\rmu(w)=\lla{\mu(\la{w})}$.  With a little thought, many of
+our \abg\ observations hold in the complementary case.
+
+\begin{corollary}
+The following are true about the complementary \abg:
+\begin{enumerate}
+\item The following properties of true of each string $S$ generated by the
+\rabg:
+\begin{itemize}
+\item The substring \q{bb} does not appear in $S$.
+\item The string \q{baa\cdot b} appears uniquely in the image $\rmu(ab)$;
+the string \q{b\cdot ab} appears uniquely in the image $\rmu(ba)$.
+\item Scanned from left-to-right, the occurances of single- and twin-$a$'s alternate.
+\end{itemize}
+\item In words of the \rabg, four consecutive $b$'s are never equally spaced.
+\item Strings generated by the \rabg\ are biquadratic-free.
+\end{enumerate}
+\end{corollary}
+
+\begin{lemma}\label{lem:rabcurl}
+The characters of any finite \rabs\ string $S$, in an appropriate larger context, obey the curling rules: every $a\in S$ has curl 2 and every $b\in S$ has curl 3.
+\end{lemma}
+\ni The proof is omitted, but follows in a rather obvious manner the proof
+of Lemma~\ref{lem:abcurl}.
+
+
+This leads to a surprising result:
+\begin{theorem}
+In strings generated by the \abg, the curl can be interpretted in both directions.
+\end{theorem}
+
+\Proof By Lemma~\ref{lem:abcurl}, we know the \abg\ generates strings whose
+letters can be interpreted as the curl of the string to the left.  Since
+the \rabg\ generates the language of reversed words from the \abg, and since,
+by Lemma~\ref{lem:rabcurl}, the \rabg\ also generates strings whose letters
+can be interpreted as the curl of strings to the right the result is that
+each letter of both grammars can be interpreted as the curl in both directions.\QED
+
+
+
+
+\subsection{Discussion}
+Our development of the \abg\ allows us to generate large structures, or
+\term{crystals} that, in the appropriate context, have the structure of the
+curling function, iteratively applied.  The grammar also gives us the
+possibility of understanding the structure of \term{wild-type} curling
+sequences---sequences generated strictly from (possibly grammatically
+ill-structured) starting sequences.  Both of these are important advances
+in the tools we have available to us in understanding the structure of
+curling sequences.  In the next section we will see ways that these tools
+can be applied to give us a handle on some of the open questions related to
+this rich and intriguing problem.
+
+\begin{theorem}\label{thm:scale}
+Suppose $S$ is an \abs\ string with $s=cn(S)$.  Let $T=\mu(\rmu(S))$ with
+$U=\mu(\rmu(s))$.  If $u\in U$ such that $U=VuW$, then $u=cn(TV)$.
+\end{theorem}
+\Proof  First, a few observations.
+
+Suppose $k=cn(S)$.  This implies that can be written $S=X\cdot Y^k$ for 
+nontrivial $Y$ and maximum $k$.  Scaling these results up we have
+\begin{align*}
+T&=\mu\rmu(S)\\
+&=\mu\rmu(X\cdot Y^k)\\
+&=\mu\rmu(X)\cdot\mu\rmu(Y)^k
+\end{align*}
+\ni and so we have that $cn(T)\ge k$.  Our concern is to demonstrate
+that $T^{(e)}$ is prefixed with $\mu\rmu(k)$.
+\QED
+
+Essentially, Theorem~\ref{thm:scale} says that if a string $S$ generates
+a long tail, then $T=\mu(\rmu(S))$ generates a tail that is, itself,
+a scaled up version of the tail of $S$:
+
+
+\section{Reflections on \twth-curling Sequences}\label{sect:reflections}
+Throughout our discussion of the \abg, we proved theorems about strings
+found ``in an appropriate context''.  This was necessary because theorems
+about the correctness of the curling function would necessarily fail near
+the beginning of a string since the potential for the pattern $XY^k$ was
+limited.  Thus we placed the string in a larger context,
+usually to the left, that supported the pattern of curls found within our
+string.  So, for example, if the string was a ``b-crystal'', that is a string
+of the form $\mu^i(b)$, we could use Lemma~\ref{lem:curltwo} to demonstrate
+that it was the image of the leftmost $b$ in $\mu^{i}(baaabaaab)$.  This
+means that the prefix $baaabaaa$ serves as a suitable ``growth medium'' for the
+final $b$ in the string: given the starting sequence $\mu^i(baaabaaa)$
+the result is a tail that includes the entire $b$-crystal, $\mu^i(b)$.  The
+fact that crystals grow arbitrarily large allows us to say:
+
+\begin{observation}
+The function $\Omega(n)$, the length of the longest tail given a starting
+sequence of length $n$, is at least linear.
+\end{observation}
+
+\ni This is not a very aggressive statement.
+
+\section{Rotten Sequences}\label{sect:rotten}
+One way to better understand patterns in the growth of structures related to this problem is to consider starting sequences of increasing length.
+One approach to increasing the length of a starting sequence $S$ is to prepend a
+digit $s$.  When we do this, three things can happen: the tail can increase 
+in length, stay the same length, or get shorter.  When the tail grows, we
+say $S$ is \term{active}.  When the tail becomes shorter, we say $S$ is
+\term{rotten}.  When the tail is the same length, it is often because $s$
+has no impact on the structure of the tail; in these cases, we say $s$ is
+\term{neutral}.  [Ed. Are there cases where the tail changes, but remains
+the same length?]  The behavior is, of course, dependent on whether $s$ is
+2 or 3, and we indicate these, where it is important by saying that $S$ is
+\term{2- or 3-rotten} or saying $S$ is \term{2- or 3-active}.  To date,
+we have not found any sequence that is \term{doubly rotten} (both 2-rotten and 3-rotten), or \term{doubly active} (both 2-active and 3-active).  Thus it 
+is conjectured that it is possible to prepend \emph{some} digit on a starting sequence without changing the length of its tail.  Knowing this is important
+in demonstrating that the maximum tail length function, $\Omega(n)$ is 
+non-decreasing.
+
+Previous work had discovered all rotten sequences of length $34$ or less.
+We have found all rotten sequences to length 48 (see Table~\ref{tab:rot}).  Happily, none
+are doubly rotten.  In addition, we have enumerated all the active sequences
+to length 40 (see Table~\ref{tab:act}).  An interesting feature is that
+the graph of rotten sequences (Figure~\ref{fig:rot}) demonstrates different
+growth rates based on the sequence length, mod 3.  Similarly, the graph
+of active sequences (Figure~\ref{fig:act}) demonstrates two rates, based on
+the sequence length, mod 2.  We believe that understanding the fine structure
+of this graph will aid us in developing a proof that doubly rotten (or active)
+sequences do not exist.
+
+\begin{table}\label{tab:rot}
+\begin{center}
+\begin{tabular}{rrrrrrrrrr}
+       0&       1&       1&       0&       1&       1&       2&       4&       4&       8\\
+      14&      11&      18&      30&      26&      24&      40&      35&      58&      69\\
+      48&      84&     158&      67&     139&     287&     215&     242&     490&     323\\
+     624&     919&     516&    1072&    2150&     911&    1891&    3930&    2438&    3544\\
+    7387&    4212&    8459&   14367&    7451&   15386&   31291&  *12953&        &
+\end{tabular}
+\end{center}
+\caption[]{Number of rotten sequences of lengths 1 through 48. (A216950)}
+\end{table}
+\begin{figure}\label{fig:rot}
+\begin{center}
+\includegraphics[width=4in]{rotten.pdf}
+\end{center}
+\caption[]{FIX FOR 48: Graph of counts of rotten sequences, lengths 1 through 47.}
+\end{figure}
+
+\begin{table}\label{tab:act}
+\begin{center}
+\begin{tabular}{rrrrrrrrrr}
+?& 1& 2& 1& 5& 3& 12& 9& 19& 16\\
+38& 20& 59& 42& 104& 65& 213& 111& 400& 245\\
+765& 439& 1563& 820& 3046& 1731& 5955& 3292& 12078& 6343\\
+23841& 13090& 47204& 25534& 95140& 50154& 189045& 101861& 376225& 201242\\
+\end{tabular}
+\end{center}
+\caption[]{Number of active sequences of lengths 2 through 40. (A217437)}
+\end{table}
+\begin{figure}\label{fig:act}
+\begin{center}
+\includegraphics[width=4in]{active.pdf}
+\end{center}
+\caption[]{FIX FOR 41+: Graph of counts of active sequences, lengths 1 through 40.}
+\end{figure}
+
+\subsection{Computational Details}
+Here, a brief discussion of the harmony project.
+
+\section{Results}\label{sect:results}
+
+\section{Conclusions}\label{sect:conclusions}
+\section*{Appendix: Proofs}\label{app:proofs}
+\ni{\bf Proof of Lemma~\ref{lemma:p4}.} We prove by contradiction.  Assume that for nontrivial, $T$, $T^4$ appears
 in the word generated by iteratively rewriting some nonterminal $k$ times, where $k$ is minimal.
 Rather obviously, $k>1$, since the expansions of \q{a} and \q{b} do not contain
 such a string.  Also note that $T$ must contain a \q{b} symbol since $a^4$ never
 occurs.  Indeed, if it contained only one \q{b}, then we would have
  $$T=UbV$$
  $$T^4=UbVUbVUbVUbV$$
-\ni but the $b$-free string $vu$ necessarily separates four consecutive \q{b} symbols
+\ni but the $b$-free string $VU$ necessarily separates four consecutive \q{b} symbols
 by equal distances which, by Observation~\ref{obs:fourb}, cannot happen.  The string $T$ then, must have
 two or more \q{b} symbols.
 
@@ -359,38 +575,7 @@ $y=3$.  Whenever $x=2$, then $Q$ is part of a triple, and $T^4$ appears as the r
 
 Having shown every possibility for $T$ leads to a contradiction, we find the theorem true.\QED
 
-\medskip
-
-We now demonstrate a relationship between the sequences generated from the
-curl calculation from starting sequences, and the words generated by the
-\abg. We will say that a finite length \twth-string is \term{\abs}
-if it corresponds to a substring of a finite string generated (from \q{a}) by the
-\abg.
-
-We now prove statements about the correctness of each \q{a} and \q{b} in terms
-the sequence that supports it.  We will describe each class of the cases
-based on the form of the address.
-
-\begin{lemma}
-Suppose $S=xT\cdot xT\cdot x$ is a finite, \abs\ string.  Then, any $y$ in
-the expansion $\mu^i(x)$ of the rightmost instance of $x$ has curl at least 2.
-\end{lemma}
-\Proof Suppose $\mu^i(x)=UyV$.  Then 
-$$\mu^i(S)=UyV\mu^i(T)UyV\mu^i(T)UyV$$
-\ni and we have
-$$\mu^i(S)=UY^2yV$$
-\ni where
-$$Y=yV\mu^i(T)U$$
-\ni and thus $y$ has curl at least 2.\QED
-
-\ni Example.  Suppose $S=\mu(b)=baaa\cdot baaa\cdot b_2$.  Then any symbol
-$y$ in the expansion of $b_2$ has curl 2 or 3.
-
-\ni Example.  Suppose $S=a_0a_1a_2$.  Then any symbol in the image of $a_2$
-has curl 2 or 3.
-
-\begin{lemma}\label{lem:properacurl} No \q{a} can have a curl of 3.
-\end{lemma}
+\ni{\bf Proof of Lemma~\ref{lem:propercurl}.}
 \Proof Suppose it did.  Then there exists and \abs\ $S=\mu(S')=XY^3aZ$, with $Y$ nonempty.
 $S$ must appear in the expansion of \q{a}.  Let's assume this happens, first,
 after $k$ rewrites.  (ie. that $S$ is a subword of $\mu^k(a)$ containing this
@@ -411,7 +596,7 @@ of single and double $a$'s.
 There are two cases: when the singletons appear to the left of respective doubles---
 that is, all expansions of \q{b} appear within $Y$, and when the doubles appear to the left of the singletons---when some expansion of \q{b} crosses the $YY$ boundary.
 Suppose $Y=Ub\s{3}b\cdots \s{3}bV$, where $U=\cdots\s{1}$ and $V=\s{2}\cdots$.  Then $V\cdot U$ must be the expansion of $n$ $a$'s: $VU$ is $\mu(a)=aaba$, $\mu(aa)=aabaaaba$, or $\mu(aaa)=aabaaabaaaba$.
-Then, with some though about forced patterns the boundary strings $X$ and $aZ$, we can write $XU=X'\mu(a^r)$ and $VaZ=\mu(a^t)Z'$, where
+Then, with some thought about forced patterns the boundary strings $X$ and $aZ$, we can write $XU=X'\mu(a^r)$ and $VaZ=\mu(a^t)Z'$, where
 $r+t=n+1$ and $V$ is at least $aab$:
 \begin{align*}
 S&=XUb\s{3}b\cdots \s{3}bV\cdot Ub\s{3}b\cdots \s{3}bV\cdot  Ub\s{3}b\cdots \s{3}bV\cdot a\\
@@ -443,11 +628,7 @@ S &=X'\mu((bP)^3)\cdot \mu(a)Z'
 Having considered all the possiblities, the theorem is shown to be true.
 \QED
 
-
-\begin{lemma}\label{lem:abcurl}
-Let $S$ be a finite, \abs\ word.  In an appropriate larger context, every $a\in S$ has curl 2 and every $b\in S$ has curl 3.
-\end{lemma}
-\Proof We seek to demonstrate that each $a_i$ is at least 2 and each $b_i$ is 3.
+\ni{\bf Proof of Lemma~\ref{lem:abcurl}.} We seek to demonstrate that each $a_i$ is at least 2 and each $b_i$ is 3.
 Lemma~\ref{lemma:p4} demonstrates that the maximum number of times any substring
 repeats is less than 4.  Likewise for any $a_i$ we need only demonstrate a curl
 of 2 since Lemma~\ref{lem:properacurl} eliminates the possiblity that it is greater.
@@ -559,40 +740,7 @@ In cases where the address of $a_3$ does not contain a $b_2$ in any finite
 suffix of its address, the curl is insufficint, and is calculated as 1.
 \QED
 
-It is useful to consider the \term{complementary \abg}, 
-which we will often write as the morphism $\rmu$. It differs from $\mu$ by
-its action on \q{a}:
-\begin{align*}
-\rmu(a)&=abaa\\
-\rmu(b)&=baaabaaab
-\end{align*}
-\ni Writing the reverse of a word, $w$ as $\tilde{w}$, it is easy to see
-that $\rmu(w)=\widetilde{\mu(\tilde{w})}$.  With a little thought, many of
-our \abg\ observations hold in the complementary case.
-
-\begin{corollary}
-The following are true about the complementary \abg:
-\begin{enumerate}
-\item The following properties of true of each string $S$ generated by the
-\rabg:
-\begin{itemize}
-\item The substring $bb$ does not appear in $S$.
-\item The string $baa\cdot b$ appears uniquely in the image $\rmu(ab)$;
-the string $b\cdot ab$ appears uniquely in the image $\rmu(ba)$.
-\item Scanned from left-to-right, the occurances of single- and twin-$a$'s alternate.
-\end{itemize}
-\item In words of the \rabg, four consecutive $b$'s are never equally spaced.
-\item Strings generated by the \rabg\ are biquadratic-free.
-\end{enumerate}
-\end{corollary}
-
-\begin{lemma}\label{lem:rabcurl}
-The characters of any finite \rabs\ string $S$, in an appropriate larger context, obey the curling rules: every $a\in S$ has curl 2 and every $b\in S$ has curl 3.
-\end{lemma}
-\ni The proof is omitted, but follows in a rather obvious manner the proof
-of Lemma~\ref{lem:abcurl}.
-
-\ni[Ed. This proof to be moved to appendix, or dropped if obvious. \Proof Proof of complementary grammar.  Suppose we label
+\ni{\bf Proof of Lemma~\ref{lem:abcurl}.} \ni[Ed. This proof to be moved to appendix, or dropped if obvious. \Proof Proof of complementary grammar.  Suppose we label
 $$\rmu(a)=a_8b_3a_7a_6$$
 \ni then, we have the following cases:
 
@@ -634,27 +782,6 @@ abaa\cdot a&\rightarrow abaabaaabaaababaaab\cdot a\cdot a\cdot a\cdot b_3aa
 \end{align*}
 FINISH
 \QED]
-
-This leads to a surprising result:
-\begin{theorem}
-In strings generated by the \abg, the curl can be interpretted in both directions.
-\end{theorem}
-
-\Proof By Lemma~\ref{lem:abcurl}, we know the \abg\ generates strings whose
-letters can be interpreted as the curl of the string to the left.  Since
-the \rabg\ generates the language of reversed words from the \abg, and since,
-by Lemma~\ref{lem:rabcurl}, the \rabg\ also generates strings whose letters
-can be interpreted as the curl of strings to the right the result is that
-each letter of both grammars can be interpreted as the curl in both directions.\QED
-
-
-\section{Reflections on \twth-curling Sequences}\label{sect:reflections}
-
-\section{Rotten Sequences}\label{sect:rotten}
-\subsection{Computational Details}
-\section{Results}\label{sect:results}
-\section{Conclusions}\label{sect:conclusions}
-\section*{Appendix: Proofs}\label{app:proofs}
 
 \ni{\bf Proof of Theorem~\ref{thm:aperiodic}.} (motivated by Gr\"unbaum, p. 573, 10.6.3).
 An infinite \ab-sequence (a \term{curly sequence}) cannot be written as infinitely many repetitions of
